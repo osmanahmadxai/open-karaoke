@@ -6,6 +6,10 @@
     <title>Croonly — open-source karaoke with real-time autotune</title>
     <meta name="description" content="Free, open-source karaoke for macOS, Windows and Linux. Search any song, sing over the instrumental with synced lyrics and a real-time autotune." />
     <link rel="icon" href="icon.png" />
+    <meta property="og:title" content="Croonly: open-source karaoke with real-time autotune" />
+    <meta property="og:description" content="Search any song, sing over the instrumental with synced lyrics and a live autotune. Free for macOS, Windows and Linux." />
+    <meta property="og:image" content="https://osmanahmadxai.github.io/croonly/screenshots/banner.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -65,6 +69,8 @@
       .meta { margin-top: 14px; color: var(--muted); font-size: 14px; }
       .others { margin-top: 10px; font-size: 14px; color: var(--muted); }
       .others a { color: var(--text); margin: 0 6px; }
+      .shot { margin: 56px auto 0; max-width: 1040px; border-radius: 18px; overflow: hidden; box-shadow: 0 50px 120px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+      .shot img { width: 100%; display: block; }
       .platforms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 20px; }
       .plat { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
       .plat.me { border-color: rgba(193, 60, 240, 0.6); box-shadow: 0 0 0 1px rgba(193, 60, 240, 0.3) inset; }
@@ -112,6 +118,7 @@
         </a>
         <div class="meta" id="meta">Free · Open source (MIT) · macOS, Windows &amp; Linux</div>
         <div class="others" id="others"></div>
+        <div class="shot"><img src="screenshots/stage.jpg" alt="Croonly singing screen with lyrics, pitch graph and autotune controls" /></div>
       </section>
 
       <section class="platforms" id="downloads">
