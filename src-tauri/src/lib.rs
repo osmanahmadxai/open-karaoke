@@ -256,6 +256,9 @@ async fn song_separate(app: AppHandle, state: State<'_, AppState>, path: String,
         return apply_track(&state).await;
     }
 
+    if !audio::separate::AVAILABLE {
+        return Err(audio::separate::UNAVAILABLE.into());
+    }
     let model = tools::ensure_model(&app, &state.dirs.tools).await?;
     let p = PathBuf::from(&path);
     let (mix, key) = blocking(move || -> Res<_> {

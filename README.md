@@ -51,11 +51,13 @@ Or pick a file directly. These links always point to the newest version.
 
 | | Minimum | Recommended |
 |---|---|---|
-| OS | macOS 11, Windows 10 (64-bit), or a modern 64-bit Linux | Latest version |
+| OS | macOS 11, Windows 10 (64-bit), or 64-bit Linux from 2024 or newer (glibc 2.39+: Ubuntu 24.04, Fedora 40, Debian 13…) | Latest version |
 | Memory | 8 GB RAM | 16 GB RAM |
 | CPU | Any 64-bit dual-core from the last ~8 years | 4+ cores (separation runs 5–15× faster than real time) |
 | Disk | ~300 MB, plus up to 6 GB of cache (cleaned automatically) | SSD |
 | Audio | Any microphone and speakers | Headphones and a USB microphone |
+
+<sub>On **Intel Macs** everything works except AI separation, because ONNX Runtime doesn't ship for that platform yet; songs use the basic vocal remover instead. Every Apple Silicon Mac (M1 and newer) gets the full AI.</sub>
 
 ## 🖼 Screenshots
 

@@ -7,13 +7,19 @@
 //! and finished segments are handed to the caller in order, which lets
 //! playback start long before the whole song is done.
 
+#[cfg(has_ort)]
 use ort::session::builder::GraphOptimizationLevel;
+#[cfg(has_ort)]
 use ort::session::Session;
+#[cfg(has_ort)]
 use ort::value::Tensor;
 use realfft::num_complex::Complex32;
 use realfft::{ComplexToReal, RealFftPlanner, RealToComplex};
 use std::path::Path;
 use std::sync::Arc;
+
+/// Whether this build can run the AI model (false on Intel Macs).
+pub const AVAILABLE: bool = cfg!(has_ort);
 
 /// The model works on 44.1 kHz stereo.
 pub const MODEL_RATE: u32 = 44_100;
@@ -157,6 +163,7 @@ impl Stft {
     }
 }
 
+#[cfg(has_ort)]
 pub struct Separator {
     session: Session,
     /// Must outlive the session.
@@ -165,6 +172,7 @@ pub struct Separator {
     stft: Stft,
 }
 
+#[cfg(has_ort)]
 impl Separator {
     pub fn load(model: &Path, spec: MdxConfig) -> Result<Self, String> {
         let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(4);
@@ -296,6 +304,29 @@ impl Separator {
         Ok(())
     }
 }
+
+/// Stand-in for builds without ONNX Runtime; callers check [`AVAILABLE`].
+#[cfg(not(has_ort))]
+pub struct Separator {
+    cfg: MdxConfig,
+}
+
+#[cfg(not(has_ort))]
+impl Separator {
+    pub fn load(_model: &Path, _spec: MdxConfig) -> Result<Self, String> {
+        Err(UNAVAILABLE.into())
+    }
+
+    pub fn config(&self) -> MdxConfig {
+        self.cfg
+    }
+
+    pub fn run(&mut self, _mix: &[f32], _on_segment: impl FnMut(&[f32], f32) -> bool) -> Result<(), String> {
+        Err(UNAVAILABLE.into())
+    }
+}
+
+pub const UNAVAILABLE: &str = "AI separation isn't available on Intel Macs yet";
 
 // ------------------------------------------------------- growing buffer --
 

@@ -65,7 +65,8 @@ pub fn status(dir: &Path) -> ToolStatus {
     let ytdlp = ytdlp_path(dir).is_file();
     let deno = deno_path(dir).is_file();
     let model = model_path(dir).is_file();
-    ToolStatus { ready: ytdlp && deno && model, ytdlp, deno, model }
+    let model_ok = model || !crate::audio::separate::AVAILABLE;
+    ToolStatus { ready: ytdlp && deno && model_ok, ytdlp, deno, model }
 }
 
 #[derive(Serialize, Clone)]
@@ -151,7 +152,9 @@ pub async fn install(app: &AppHandle, dir: &Path) -> Result<ToolStatus, String> 
         make_executable(&deno_path(dir))?;
     }
 
-    ensure_model(app, dir).await?;
+    if crate::audio::separate::AVAILABLE {
+        ensure_model(app, dir).await?;
+    }
 
     let _ = app.emit("setup://progress", SetupProgress { step: "done", label: "Ready", fraction: 1.0 });
     Ok(status(dir))

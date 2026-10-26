@@ -48,3 +48,8 @@ codegen-units = 1
 lto = true
 opt-level = 3
 strip = true
+
+# AI vocal separation (MDX-Net) on ONNX Runtime. No prebuilt runtime exists
+# for Intel Macs; there the app falls back to the basic vocal remover.
+[target.'cfg(not(all(target_os = "macos", target_arch = "x86_64")))'.dependencies]
+ort = { version = "=2.0.0-rc.15", default-features = false, features = ["std", "download-binaries", "tls-rustls", "copy-dylibs", "api-31"] }
