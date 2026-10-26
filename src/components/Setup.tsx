@@ -24,7 +24,7 @@ export function Setup() {
     const un = onSetupProgress((p) => {
       setLabel(p.label);
       setFraction(p.fraction);
-      setStep(p.step === "ytdlp" ? 0 : p.step === "deno" ? 1 : 2);
+      setStep({ ytdlp: 0, deno: 1, model: 2 }[p.step] ?? 3);
     });
     if (!started.current) {
       started.current = true;
@@ -35,7 +35,7 @@ export function Setup() {
     };
   }, []);
 
-  const overall = Math.min(1, (step + fraction) / 2);
+  const overall = Math.min(1, (step + fraction) / 3);
 
   return (
     <div className="center-screen">
@@ -44,7 +44,7 @@ export function Setup() {
           <Mic />
         </div>
         <h1>Setting up your stage</h1>
-        <p>Open Karaoke is downloading two free open-source helpers it uses to fetch music. This happens once and takes about a minute.</p>
+        <p>Open Karaoke is downloading the free tools it needs: a music fetcher and the AI model that separates vocals from any song. This happens once (about 190 MB).</p>
         <div className="progress">
           <div style={{ width: `${overall * 100}%` }} />
         </div>

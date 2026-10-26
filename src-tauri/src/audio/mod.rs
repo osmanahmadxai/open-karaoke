@@ -7,4 +7,5 @@ pub mod params;
 pub mod pitch;
 pub mod psola;
 pub mod scale;
+pub mod separate;
 pub mod stretch;

@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { api, errorText, type SongMeta } from "../lib/api";
+import { librarySources } from "../lib/library";
 import { openSong } from "../lib/loader";
 import { formatTime } from "../lib/music";
 import { useStore } from "../lib/store";
 import { Mic, Play, Search as SearchIcon } from "./Icons";
 
-function Card({ m }: { m: SongMeta }) {
+function Card({ m, instant = false }: { m: SongMeta; instant?: boolean }) {
   return (
     <button className="card" onClick={() => openSong(m)} title={`${m.title} — ${m.artist}`}>
       <div className="art">
         {m.artwork && <img src={m.artwork.replace("600x600", "300x300")} alt="" loading="lazy" />}
+        {instant && (
+          <span className="instant" title="Already separated: starts instantly">
+            ⚡ Instant
+          </span>
+        )}
         <div className="play-badge">
           <Play />
         </div>
@@ -29,12 +35,23 @@ export function Search() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const history = useStore((s) => s.history);
+  const [instant, setInstant] = useState<Set<string>>(new Set());
   const input = useRef<HTMLInputElement>(null);
   const seq = useRef(0);
 
   useEffect(() => {
     input.current?.focus();
   }, []);
+
+  // Mark songs whose separation is already on disk.
+  useEffect(() => {
+    const sources = librarySources([...history.map((h) => h.id), ...(results ?? []).map((r) => r.id)]);
+    if (!sources.size) return;
+    api
+      .stemsCached([...sources.keys()])
+      .then((ready) => setInstant(new Set(ready.map((id) => sources.get(id)!))))
+      .catch(() => {});
+  }, [history, results]);
 
   useEffect(() => {
     const q = query.trim();
@@ -97,7 +114,7 @@ export function Search() {
           <div className="section-title">Songs</div>
           <div className="results">
             {results.map((m) => (
-              <Card key={m.id} m={m} />
+              <Card key={m.id} m={m} instant={instant.has(m.id)} />
             ))}
           </div>
         </>
@@ -133,7 +150,7 @@ export function Search() {
           <div className="section-title">Sung recently</div>
           <div className="results">
             {history.map((m) => (
-              <Card key={m.id} m={m} />
+              <Card key={m.id} m={m} instant={instant.has(m.id)} />
             ))}
           </div>
         </>

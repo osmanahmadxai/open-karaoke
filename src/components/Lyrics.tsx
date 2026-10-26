@@ -8,7 +8,7 @@ const LEAD_IN = 3; // seconds of countdown before a line after a break
 function lyricClock(): number {
   const s = useStore.getState().song;
   const tempo = s?.info?.tempo ?? 1;
-  const offset = (s?.info?.offset ?? 0) + (s?.userOffset ?? 0);
+  const offset = s?.userOffset ?? 0;
   return songTime() * tempo - offset;
 }
 

@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { api, type AudioStatus, type PitchPoint, type Score, type SongInfo, type SongMeta, type Tick, type ToolStatus } from "./api";
+import { api, type AudioStatus, type PitchPoint, type Score, type SeparateProgress, type SongInfo, type SongMeta, type Tick, type ToolStatus } from "./api";
 import type { Line } from "./lrc";
 import { DEFAULT_PARAMS, type Params } from "./presets";
 import type { Ranked } from "./sources";
 
 export type View = "boot" | "setup" | "search" | "stage" | "lab";
-export type Phase = "searching" | "downloading" | "analyzing" | "ready" | "error";
+export type Phase = "searching" | "downloading" | "separating" | "ready" | "error";
 export type Tab = "tune" | "voice" | "mix" | "song";
 
 export interface LyricsState {
@@ -22,13 +22,13 @@ export interface SongState {
   progress: number;
   info: SongInfo | null;
   lyrics: LyricsState;
-  instrumentals: Ranked[];
+  /** Candidate recordings of the original song, best first. */
   originals: Ranked[];
-  instId: string | null;
-  origId: string | null;
-  origPath: string | null;
-  sync: "pending" | "synced" | "unsynced" | "unavailable";
-  /** Manual lyric nudge on top of the automatic alignment, seconds. */
+  sourceId: string | null;
+  sourcePath: string | null;
+  /** Live AI separation progress; null when not separating. */
+  separation: SeparateProgress | null;
+  /** Manual lyric nudge, seconds (positive = lyrics later). */
   userOffset: number;
   /** Autotune key follows the detected song key. */
   keyAuto: boolean;
@@ -91,6 +91,8 @@ interface Store {
   playing: boolean;
   ended: boolean;
   recording: boolean;
+  buffering: boolean;
+  ready: number;
   mic: number;
   out: number;
   score: Score;
@@ -155,6 +157,8 @@ export const useStore = create<Store>((set, get) => ({
   playing: false,
   ended: false,
   recording: false,
+  buffering: false,
+  ready: 0,
   mic: 0,
   out: 0,
   score: { accuracy: 0, sung: 0, points: 0, streak: 0 },
@@ -268,6 +272,8 @@ export function handleTick(t: Tick) {
   if (s.playing !== t.playing) patch.playing = t.playing;
   if (s.ended !== t.ended) patch.ended = t.ended;
   if (s.recording !== t.recording) patch.recording = t.recording;
+  if (s.buffering !== t.buffering) patch.buffering = t.buffering;
+  if (Math.abs(s.ready - t.ready) > 0.5) patch.ready = t.ready;
   if (Math.abs(s.mic - t.mic) > 0.01) patch.mic = t.mic;
   if (Math.abs(s.out - t.out) > 0.01) patch.out = t.out;
   if (s.score.points !== t.score.points || s.score.streak !== t.score.streak) patch.score = t.score;

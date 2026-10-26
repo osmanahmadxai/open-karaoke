@@ -1,8 +1,8 @@
-//! First-run installation of the external helpers Open Karaoke drives:
-//! yt-dlp (fetches audio) and Deno (the JavaScript runtime yt-dlp needs to
-//! read YouTube). Both are downloaded from their official GitHub releases
-//! into the app data folder, so users need nothing but an internet
-//! connection.
+//! First-run installation of what Open Karaoke needs besides itself:
+//! yt-dlp (fetches audio), Deno (the JavaScript runtime yt-dlp needs to read
+//! YouTube) and the AI vocal-separation model. All come from their official
+//! GitHub releases into the app data folder, so users need nothing but an
+//! internet connection.
 
 use serde::Serialize;
 use std::path::{Path, PathBuf};
@@ -23,6 +23,10 @@ pub fn ytdlp_path(dir: &Path) -> PathBuf {
 
 pub fn deno_path(dir: &Path) -> PathBuf {
     dir.join(exe("deno"))
+}
+
+pub fn model_path(dir: &Path) -> PathBuf {
+    dir.join("models").join(crate::audio::separate::MODEL.file)
 }
 
 fn ytdlp_asset() -> Result<&'static str, String> {
@@ -54,12 +58,14 @@ pub struct ToolStatus {
     pub ready: bool,
     pub ytdlp: bool,
     pub deno: bool,
+    pub model: bool,
 }
 
 pub fn status(dir: &Path) -> ToolStatus {
     let ytdlp = ytdlp_path(dir).is_file();
     let deno = deno_path(dir).is_file();
-    ToolStatus { ready: ytdlp && deno, ytdlp, deno }
+    let model = model_path(dir).is_file();
+    ToolStatus { ready: ytdlp && deno && model, ytdlp, deno, model }
 }
 
 #[derive(Serialize, Clone)]
@@ -145,8 +151,38 @@ pub async fn install(app: &AppHandle, dir: &Path) -> Result<ToolStatus, String> 
         make_executable(&deno_path(dir))?;
     }
 
+    ensure_model(app, dir).await?;
+
     let _ = app.emit("setup://progress", SetupProgress { step: "done", label: "Ready", fraction: 1.0 });
     Ok(status(dir))
+}
+
+/// Download the separation model if missing, verifying its SHA-256.
+pub async fn ensure_model(app: &AppHandle, dir: &Path) -> Result<PathBuf, String> {
+    use sha2::{Digest, Sha256};
+    let path = model_path(dir);
+    if path.is_file() {
+        return Ok(path);
+    }
+    let model = &crate::audio::separate::MODEL;
+    tokio::fs::create_dir_all(path.parent().unwrap()).await.map_err(|e| e.to_string())?;
+    let tmp = path.with_extension("download");
+    download(app, model.url, &tmp, "model", "AI vocal separation model").await?;
+    let check = tmp.clone();
+    let digest = tauri::async_runtime::spawn_blocking(move || -> Result<String, String> {
+        let mut file = std::fs::File::open(&check).map_err(|e| e.to_string())?;
+        let mut hasher = Sha256::new();
+        std::io::copy(&mut file, &mut hasher).map_err(|e| e.to_string())?;
+        Ok(hasher.finalize().iter().map(|b| format!("{b:02x}")).collect())
+    })
+    .await
+    .map_err(|e| e.to_string())??;
+    if digest != model.sha256 {
+        let _ = tokio::fs::remove_file(&tmp).await;
+        return Err("The downloaded AI model was corrupted. Please try again.".into());
+    }
+    tokio::fs::rename(&tmp, &path).await.map_err(|e| e.to_string())?;
+    Ok(path)
 }
 
 /// yt-dlp must keep pace with YouTube; refresh it at most once a day.

@@ -54,11 +54,13 @@ export function Transport() {
   const lines = useStore((s) => s.song?.lyrics.lines);
   const info = useStore((s) => s.song?.info);
   const userOffset = useStore((s) => s.song?.userOffset ?? 0);
+  const ready = useStore((s) => s.ready);
+  const separating = useStore((s) => !!s.song?.info?.separating);
   const seek = useRef<HTMLDivElement>(null);
 
   const ratio = duration > 0 ? Math.min(1, pos / duration) : 0;
   const tempo = info?.tempo ?? 1;
-  const offset = (info?.offset ?? 0) + userOffset;
+  const offset = userOffset;
 
   const onSeek = (e: React.PointerEvent) => {
     const el = seek.current;
@@ -91,6 +93,7 @@ export function Transport() {
         <span>{formatTime(pos)}</span>
         <div className="seek" ref={seek} onPointerDown={onSeek}>
           <div className="rail">
+            {separating && duration > 0 && <div className="ready-fill" style={{ width: `${Math.min(1, ready / duration) * 100}%` }} />}
             <div className="fill" style={{ width: `${ratio * 100}%` }} />
           </div>
           {duration > 0 &&

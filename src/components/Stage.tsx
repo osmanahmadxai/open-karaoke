@@ -1,6 +1,6 @@
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { api } from "../lib/api";
-import { closeSong, openSong } from "../lib/loader";
+import { closeSong, openSong, startThreshold } from "../lib/loader";
 import { keyName } from "../lib/music";
 import { useStore, type Phase } from "../lib/store";
 import { Check, Circle, Play } from "./Icons";
@@ -10,9 +10,9 @@ import { PitchGraph } from "./PitchGraph";
 import { togglePlay, Transport } from "./Transport";
 
 const STEPS: { phase: Phase; label: string }[] = [
-  { phase: "searching", label: "Finding the best instrumental" },
+  { phase: "searching", label: "Finding the original recording" },
   { phase: "downloading", label: "Downloading audio" },
-  { phase: "analyzing", label: "Detecting key & preparing the stage" },
+  { phase: "separating", label: "Separating the vocals with AI" },
 ];
 
 function LoadingCard() {
@@ -45,11 +45,33 @@ function LoadingCard() {
                 {i < order ? <Check style={{ color: "var(--ok)" }} /> : i === order ? <div className="spinner" /> : <Circle />}
                 {s.label}
                 {i === order && s.phase === "downloading" && song.progress > 0 && ` · ${Math.round(song.progress * 100)}%`}
+                {i === order && s.phase === "separating" && song.separation && song.separation.ready > 0 && ` · ${Math.round(song.separation.ready)} s ready`}
               </div>
             ))}
+            {song.phase === "separating" && song.separation && <SeparationBar />}
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Progress toward the head start needed before singing can begin. */
+function SeparationBar() {
+  const song = useStore((s) => s.song)!;
+  const p = song.separation!;
+  const duration = song.info?.sourceDuration ?? song.meta.duration;
+  const target = duration > 0 ? startThreshold(p, duration) : 30;
+  const frac = Math.min(1, p.ready / Math.max(1, target));
+  return (
+    <div style={{ marginTop: 6 }}>
+      <div className="progress">
+        <div style={{ width: `${frac * 100}%` }} />
+      </div>
+      <p className="help" style={{ marginTop: 8 }}>
+        {p.speed > 0 ? `Running ${p.speed.toFixed(1)}× faster than real time. ` : "Loading the AI model… "}
+        You can start once {Math.round(target)} s are ready; the rest finishes while you sing. Next time this song starts instantly.
+      </p>
     </div>
   );
 }
@@ -144,6 +166,7 @@ export function Stage() {
   const tuneOn = useStore((s) => s.params.tune_enabled > 0.5);
   const tuneKey = useStore((s) => s.params.tune_key);
   const tuneScale = useStore((s) => s.params.tune_scale);
+  const buffering = useStore((s) => s.buffering);
   if (!song) return null;
 
   const loading = song.phase !== "ready";
@@ -181,7 +204,19 @@ export function Stage() {
                 {song.info.tempo !== 1 && <b>{Math.round(song.info.tempo * 100)}%</b>}
               </span>
             )}
-            {song.info?.vocalRemoved && <span className="chip">Vocal remover</span>}
+            {song.info?.vocalRemoved && <span className="chip">Basic vocal remover</span>}
+            {song.info?.separating && song.separation && (
+              <span className="chip" title="The AI keeps separating the rest of the song while you sing">
+                <span className="spinner" style={{ width: 11, height: 11, borderWidth: 1.5 }} />
+                Separating <b>{Math.round(song.separation.fraction * 100)}%</b>
+              </span>
+            )}
+            {buffering && (
+              <span className="chip">
+                <span className="dot warn" />
+                <b>Catching up…</b>
+              </span>
+            )}
           </div>
         </div>
         <Lyrics />

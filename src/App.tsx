@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { api, onDownloadProgress, onTick } from "./lib/api";
-import { closeSong } from "./lib/loader";
+import { closeSong, listenForSeparation } from "./lib/loader";
 import { handleTick, useStore } from "./lib/store";
 import { Back, Expand, Mic, Panel, Settings as SettingsIcon } from "./components/Icons";
 import { Search } from "./components/Search";
@@ -125,9 +125,7 @@ function useShortcuts() {
       if (s.view !== "stage" || !s.song) return;
       const nudge = (d: number) => {
         const song = useStore.getState().song!;
-        const userOffset = Math.round((song.userOffset + d) * 100) / 100;
-        s.patchSong({ userOffset });
-        void api.songSetOffset((song.info?.offset ?? 0) + userOffset);
+        s.patchSong({ userOffset: Math.round((song.userOffset + d) * 100) / 100 });
       };
       switch (e.key) {
         case " ":
@@ -173,6 +171,7 @@ export default function App() {
 
   useEffect(() => {
     const tick = onTick(handleTick);
+    const stopSeparation = listenForSeparation();
     const dl = onDownloadProgress((p) => {
       const song = useStore.getState().song;
       if (song?.phase === "downloading") useStore.getState().patchSong({ progress: p.fraction });
@@ -184,6 +183,7 @@ export default function App() {
     })();
     return () => {
       void tick.then((f) => f());
+      stopSeparation();
       void dl.then((f) => f());
     };
   }, []);

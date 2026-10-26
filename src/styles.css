@@ -800,9 +800,21 @@ select {
   background: var(--raise-2);
   overflow: hidden;
 }
+.seek .rail {
+  position: relative;
+}
 .seek .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
   height: 100%;
   background: var(--grad);
+}
+.seek .ready-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.16);
+  transition: width 0.4s;
 }
 .seek .mark {
   position: absolute;
@@ -1737,4 +1749,22 @@ select {
 .win-controls svg {
   width: 12px;
   height: 12px;
+}
+
+.card .instant {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(11, 10, 16, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }

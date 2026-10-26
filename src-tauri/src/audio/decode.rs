@@ -116,3 +116,116 @@ fn resample(chans: &[Vec<f32>; 2], from: u32, to: u32) -> Result<(Vec<f32>, Vec<
     r.truncate(expected);
     Ok((l, r))
 }
+
+/// Resamples interleaved stereo delivered in arbitrary-sized pieces, as the
+/// vocal separator produces it. A no-op when the rates already match.
+pub struct StreamResampler {
+    rs: Option<FftFixedIn<f32>>,
+    pending: [Vec<f32>; 2],
+    skip: usize,
+    chunk: usize,
+}
+
+impl StreamResampler {
+    pub fn new(from: u32, to: u32) -> Result<Self, String> {
+        let chunk = 2048;
+        let rs = if from == to {
+            None
+        } else {
+            Some(FftFixedIn::<f32>::new(from as usize, to as usize, chunk, 2, 2).map_err(|e| e.to_string())?)
+        };
+        let skip = rs.as_ref().map(|r| r.output_delay()).unwrap_or(0);
+        Ok(Self { rs, pending: [Vec::new(), Vec::new()], skip, chunk })
+    }
+
+    /// Feed interleaved stereo; `out` receives whatever is ready.
+    pub fn push(&mut self, input: &[f32], out: &mut Vec<f32>) -> Result<(), String> {
+        out.clear();
+        if self.rs.is_none() {
+            out.extend_from_slice(input);
+            return Ok(());
+        }
+        for f in input.chunks_exact(2) {
+            self.pending[0].push(f[0]);
+            self.pending[1].push(f[1]);
+        }
+        self.drain(out)
+    }
+
+    /// Push silence through to release the filter's delayed tail.
+    pub fn flush(&mut self, out: &mut Vec<f32>) -> Result<(), String> {
+        out.clear();
+        if self.rs.is_none() {
+            return Ok(());
+        }
+        let delay = self.rs.as_ref().map(|r| r.output_delay()).unwrap_or(0);
+        let pad = self.chunk * 2 + delay;
+        for ch in self.pending.iter_mut() {
+            ch.extend(std::iter::repeat(0.0).take(pad));
+        }
+        self.drain(out)
+    }
+
+    fn drain(&mut self, out: &mut Vec<f32>) -> Result<(), String> {
+        let rs = self.rs.as_mut().unwrap();
+        while self.pending[0].len() >= self.chunk {
+            let block = rs
+                .process(&[&self.pending[0][..self.chunk], &self.pending[1][..self.chunk]], None)
+                .map_err(|e| e.to_string())?;
+            for ch in self.pending.iter_mut() {
+                ch.drain(..self.chunk);
+            }
+            for i in 0..block[0].len() {
+                if self.skip > 0 {
+                    self.skip -= 1;
+                    continue;
+                }
+                out.push(block[0][i]);
+                out.push(block[1][i]);
+            }
+        }
+        Ok(())
+    }
+}
+
+/// Save interleaved stereo as 16-bit WAV, atomically (write, then rename).
+pub fn write_wav(path: &Path, stereo: &[f32], rate: u32) -> Result<(), String> {
+    let tmp = path.with_extension("part");
+    let spec = hound::WavSpec { channels: 2, sample_rate: rate, bits_per_sample: 16, sample_format: hound::SampleFormat::Int };
+    let mut w = hound::WavWriter::create(&tmp, spec).map_err(|e| e.to_string())?;
+    for &s in stereo {
+        w.write_sample((s.clamp(-1.0, 1.0) * 32767.0).round() as i16).map_err(|e| e.to_string())?;
+    }
+    w.finalize().map_err(|e| e.to_string())?;
+    std::fs::rename(&tmp, path).map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn streaming_resampler_keeps_length_and_pitch() {
+        let (from, to) = (44_100u32, 48_000u32);
+        let n = from as usize * 3;
+        let input: Vec<f32> = (0..n).flat_map(|i| {
+            let v = (std::f32::consts::TAU * 440.0 * i as f32 / from as f32).sin() * 0.5;
+            [v, v]
+        }).collect();
+        let mut rs = StreamResampler::new(from, to).unwrap();
+        let (mut out, mut all) = (Vec::new(), Vec::new());
+        // Uneven piece sizes, like separator segments.
+        for piece in input.chunks(2 * 12_345) {
+            rs.push(piece, &mut out).unwrap();
+            all.extend_from_slice(&out);
+        }
+        rs.flush(&mut out).unwrap();
+        all.extend_from_slice(&out);
+        let expected = n * to as usize / from as usize;
+        assert!((all.len() / 2) >= expected, "{} < {expected}", all.len() / 2);
+        // Zero crossings over 1 s in the middle → 440 Hz.
+        let mid = &all[2 * to as usize..4 * to as usize];
+        let crossings = mid.chunks(2).collect::<Vec<_>>().windows(2).filter(|w| (w[0][0] < 0.0) != (w[1][0] < 0.0)).count();
+        assert!((crossings as i32 - 880).abs() <= 4, "{crossings}");
+    }
+}

@@ -47,26 +47,6 @@ function common(v: Video, song: SongMeta) {
   return { t, score };
 }
 
-export function rankInstrumentals(videos: Video[], song: SongMeta): Ranked[] {
-  return dedupe(videos)
-    .map((video) => {
-      let { t, score } = common(video, song);
-      const isInst = t.includes("instrumental");
-      const isKaraoke = t.includes("karaoke");
-      if (isInst) score += 45;
-      if (isKaraoke) score += 35;
-      if (t.includes("backing track")) score += 20;
-      if (t.includes("official instrumental")) score += 15;
-      // Karaoke channels that keep the original backing vocals are still fine,
-      // but tracks that advertise vocals are not.
-      if (t.includes("with vocals") || t.includes("guide vocal") || t.includes("backing vocals")) score -= 25;
-      if (!isInst && !isKaraoke && !t.includes("backing track")) score -= 70;
-      if (t.includes("lyrics") && !isInst && !isKaraoke) score -= 20;
-      return { video, score };
-    })
-    .sort((a, b) => b.score - a.score);
-}
-
 export function rankOriginals(videos: Video[], song: SongMeta): Ranked[] {
   return dedupe(videos)
     .map((video) => {
@@ -74,7 +54,9 @@ export function rankOriginals(videos: Video[], song: SongMeta): Ranked[] {
       if (t.includes("official audio")) score += 25;
       else if (t.includes("official")) score += 10;
       if (t.includes("audio")) score += 5;
-      if (hasAny(t, ["instrumental", "karaoke", "backing track", "no vocals"])) score -= 80;
+      // The AI needs the real vocal mix, and lyrics are timed to the original.
+      if (hasAny(t, ["instrumental", "karaoke", "backing track", "no vocals", "acapella", "a cappella"])) score -= 80;
+      if (t.includes("lyrics") || t.includes("lyric video")) score += 3; // usually the exact album audio
       if (t.includes("music video")) score -= 5; // videos often have intros/outros
       return { video, score };
     })
@@ -85,6 +67,3 @@ function dedupe(videos: Video[]): Video[] {
   const seen = new Set<string>();
   return videos.filter((v) => (seen.has(v.id) ? false : (seen.add(v.id), true)));
 }
-
-/** Below this the best "instrumental" is probably not one. */
-export const INSTRUMENTAL_THRESHOLD = 25;

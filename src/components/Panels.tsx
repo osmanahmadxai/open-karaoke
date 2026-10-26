@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api } from "../lib/api";
-import { switchInstrumental, switchToVocalRemover, transform } from "../lib/loader";
+import { switchSource, switchToVocalRemover, transform } from "../lib/loader";
 import { formatTime, HARMONIES, keyName, NOTE_NAMES, SCALES } from "../lib/music";
 import { FX_PRESETS, SOUND_KEYS, TUNE_PRESETS, type Preset } from "../lib/presets";
 import { useStore, type Tab } from "../lib/store";
@@ -225,7 +224,7 @@ export function MixPanel() {
         <ParamSlider name="instrumental" label="Instrumental" min={0} max={1.2} format={pct} reset={0.85} />
         <ParamSlider name="vocal" label="Your voice" min={0} max={1.5} format={pct} reset={0.9} />
         {hasGuide && !vocalRemoved && (
-          <ParamSlider name="guide" label="Guide vocal (original)" min={0} max={1} format={(v) => (v < 0.01 ? "Off" : pct(v))} reset={0} />
+          <ParamSlider name="guide" label="Original singer (guide)" min={0} max={1} format={(v) => (v < 0.01 ? "Off" : pct(v))} reset={0} />
         )}
         <ParamSlider name="master" label="Master" min={0} max={1.2} format={pct} reset={0.9} />
       </Group>
@@ -260,6 +259,7 @@ export function SongPanel() {
 
   if (!song) return null;
 
+  const separating = !!info?.separating;
   const commit = (s: number, t: number) => {
     setSemi(s);
     setTempo(t);
@@ -267,24 +267,16 @@ export function SongPanel() {
     timer.current = window.setTimeout(() => transform(s, t), 450);
   };
 
-  const offset = (info?.offset ?? 0) + song.userOffset;
-  const nudge = (d: number) => {
-    const userOffset = Math.round((song.userOffset + d) * 100) / 100;
-    patchSong({ userOffset });
-    void api.songSetOffset((info?.offset ?? 0) + userOffset);
-  };
-
-  const syncBadge = {
-    pending: <span className="badge muted">Syncing…</span>,
-    synced: <span className="badge">Auto-synced</span>,
-    unsynced: <span className="badge warn">Check timing</span>,
-    unavailable: <span className="badge muted">Manual</span>,
-  }[song.sync];
+  const nudge = (d: number) => patchSong({ userOffset: Math.round((song.userOffset + d) * 100) / 100 });
+  const busyLoading = song.phase === "searching" || song.phase === "downloading";
 
   return (
     <div className="panel">
-      <Group title="Key of the music" extra={song.busy && <span className="badge muted">{song.busy}</span>}>
-        <div className="stepper">
+      <Group
+        title="Key of the music"
+        extra={song.busy ? <span className="badge muted">{song.busy}</span> : separating && <span className="badge muted">After separation</span>}
+      >
+        <div className="stepper" style={separating ? { opacity: 0.45, pointerEvents: "none" } : undefined}>
           <button onClick={() => commit(Math.max(-6, semi - 1), tempo)}>−</button>
           <div className="val">{semis(semi)}</div>
           <button onClick={() => commit(Math.min(6, semi + 1), tempo)}>+</button>
@@ -292,21 +284,25 @@ export function SongPanel() {
         <p className="help">
           {info?.key ? `Original key: ${keyName(info.key.tonic, info.key.minor ? 2 : 1)}. ` : ""}Move the song into your vocal range. The
           autotune key follows automatically.
+          {separating && " Available as soon as the AI finishes separating this song."}
         </p>
       </Group>
 
       <Group title="Tempo">
-        <Slider label="Speed" value={tempo} min={0.7} max={1.3} step={0.05} format={pct} reset={1} onChange={(v) => commit(semi, v)} left="Slower" right="Faster" />
+        <div style={separating ? { opacity: 0.45, pointerEvents: "none" } : undefined}>
+          <Slider label="Speed" value={tempo} min={0.7} max={1.3} step={0.05} format={pct} reset={1} onChange={(v) => commit(semi, v)} left="Slower" right="Faster" />
+        </div>
       </Group>
 
-      <Group title="Lyrics timing" extra={syncBadge}>
+      <Group title="Lyrics timing" extra={!info?.vocalRemoved && info && <span className="badge">Synced to original</span>}>
         <div className="stepper">
           <button onClick={() => nudge(-0.1)} title="Lyrics earlier ( [ )">−</button>
-          <div className="val">{`${offset >= 0 ? "+" : ""}${offset.toFixed(2)} s`}</div>
+          <div className="val">{`${song.userOffset >= 0 ? "+" : ""}${song.userOffset.toFixed(2)} s`}</div>
           <button onClick={() => nudge(0.1)} title="Lyrics later ( ] )">+</button>
         </div>
         <p className="help">
-          Use <span className="kbd">[</span> and <span className="kbd">]</span> while singing to nudge the lyrics.
+          The music is separated from the same recording the lyrics are timed to, so they line up on their own. Use{" "}
+          <span className="kbd">[</span> and <span className="kbd">]</span> to fine-tune.
           {song.userOffset !== 0 && (
             <>
               {" "}
@@ -318,38 +314,39 @@ export function SongPanel() {
         </p>
       </Group>
 
-      <Group title="Instrumental source">
-        {song.instrumentals
+      <Group title="Recording">
+        {song.originals
           .filter((r, i) => i === 0 || r.score >= 0)
-          .slice(0, 8)
+          .slice(0, 6)
           .map((r) => (
-          <button
-            key={r.video.id}
-            className={`source ${song.instId === r.video.id ? "on" : ""}`}
-            onClick={() => song.instId !== r.video.id && switchInstrumental(r)}
-            disabled={song.phase === "downloading" || song.phase === "analyzing"}
-          >
-            <img className="thumb" src={`https://i.ytimg.com/vi/${r.video.id}/mqdefault.jpg`} alt="" loading="lazy" />
-            <div style={{ minWidth: 0 }}>
-              <div className="st">{r.video.title}</div>
-              <div className="sc">
-                {r.video.channel} · {formatTime(r.video.duration ?? 0)}
+            <button
+              key={r.video.id}
+              className={`source ${song.sourceId === r.video.id && !info?.vocalRemoved ? "on" : ""}`}
+              onClick={() => (song.sourceId !== r.video.id || info?.vocalRemoved) && switchSource(r)}
+              disabled={busyLoading}
+            >
+              <img className="thumb" src={`https://i.ytimg.com/vi/${r.video.id}/mqdefault.jpg`} alt="" loading="lazy" />
+              <div style={{ minWidth: 0 }}>
+                <div className="st">{r.video.title}</div>
+                <div className="sc">
+                  {r.video.channel} · {formatTime(r.video.duration ?? 0)}
+                </div>
               </div>
-            </div>
-          </button>
-        ))}
-        {song.originals.length > 0 && (
-          <button className={`source ${info?.vocalRemoved ? "on" : ""}`} onClick={() => !info?.vocalRemoved && switchToVocalRemover()}>
+            </button>
+          ))}
+        {song.sourcePath && (
+          <button className={`source ${info?.vocalRemoved ? "on" : ""}`} onClick={() => !info?.vocalRemoved && switchToVocalRemover()} disabled={busyLoading}>
             <div className="thumb" style={{ display: "grid", placeItems: "center", fontSize: 16 }}>
               ✂︎
             </div>
             <div>
-              <div className="st">Vocal remover</div>
-              <div className="sc">Strip the lead vocal from the original recording</div>
+              <div className="st">Basic vocal remover</div>
+              <div className="sc">Instant, lower quality. Use if the AI can't run.</div>
             </div>
           </button>
         )}
-        {!song.instrumentals.length && !song.originals.length && <p className="help">Searching for sources…</p>}
+        {!song.originals.length && <p className="help">Searching for the original recording…</p>}
+        <p className="help">The AI separates the vocals from whichever recording you pick. Choose another if this one has a long intro or is a live version.</p>
       </Group>
     </div>
   );

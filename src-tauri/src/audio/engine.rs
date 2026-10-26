@@ -20,19 +20,49 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering::Relaxed};
 use std::sync::{Arc, Mutex};
 use std::thread;
 
+/// Interleaved stereo samples: complete, or still being produced by the
+/// vocal separator while playback has already started.
+#[derive(Clone)]
+pub enum Buf {
+    Full(Arc<Vec<f32>>),
+    Growing(Arc<super::separate::Growing>),
+}
+
+impl Buf {
+    /// Samples that can be played right now.
+    #[inline]
+    pub fn ready(&self) -> &[f32] {
+        match self {
+            Buf::Full(v) => v,
+            Buf::Growing(g) => g.ready_slice(),
+        }
+    }
+
+    pub fn total_samples(&self) -> usize {
+        match self {
+            Buf::Full(v) => v.len(),
+            Buf::Growing(g) => g.capacity(),
+        }
+    }
+}
+
 /// A backing track ready for playback at the engine sample rate.
 pub struct Track {
-    /// Interleaved stereo.
-    pub audio: Arc<Vec<f32>>,
-    /// Optional original recording (interleaved stereo) used as a guide vocal.
-    pub guide: Option<Arc<Vec<f32>>>,
+    pub audio: Buf,
+    /// Optional vocal guide (the isolated original singer).
+    pub guide: Option<Buf>,
     /// `track_frame = guide_frame + guide_offset`.
     pub guide_offset: i64,
 }
 
 impl Track {
     pub fn frames(&self) -> u64 {
-        (self.audio.len() / 2) as u64
+        (self.audio.total_samples() / 2) as u64
+    }
+
+    /// Frames playable now (less than `frames()` while still separating).
+    pub fn ready_frames(&self) -> u64 {
+        (self.audio.ready().len() / 2) as u64
     }
 }
 
@@ -78,6 +108,8 @@ pub struct Shared {
     pub in_latency: AtomicF32,
     pub chain_latency: AtomicU32,
     pub ended: AtomicBool,
+    /// Playback caught up with the vocal separator and is waiting for audio.
+    pub buffering: AtomicBool,
     pub input_ok: AtomicBool,
     pub stream_error: Mutex<Option<String>>,
     pub lab_state: AtomicU32,
@@ -180,6 +212,7 @@ impl Engine {
             in_latency: AtomicF32::new(0.0),
             chain_latency: AtomicU32::new(0),
             ended: AtomicBool::new(false),
+            buffering: AtomicBool::new(false),
             input_ok: AtomicBool::new(false),
             stream_error: Mutex::new(None),
             lab_state: AtomicU32::new(LAB_IDLE),
@@ -695,23 +728,33 @@ impl OutputState {
         self.mix.clear();
         self.rec_tmp.clear();
         let len = self.track.as_ref().map(|t| t.frames()).unwrap_or(0);
+        // Snapshot what is playable for this whole block (one atomic read).
+        let (audio, guide_buf, guide_offset): (&[f32], &[f32], i64) = match &self.track {
+            Some(t) => (t.audio.ready(), t.guide.as_ref().map(|g| g.ready()).unwrap_or(&[]), t.guide_offset),
+            None => (&[], &[], 0),
+        };
+        let ready = (audio.len() / 2) as u64;
+        let mut buffering = false;
         let mut peak = 0.0f32;
         for i in 0..frames {
             let (mut bl, mut br) = (0.0, 0.0);
             let (mut rl, mut rr) = (0.0, 0.0);
-            if let Some(t) = &self.track {
-                if playing && self.pos < len {
+            if self.track.is_some() && playing && self.pos < len {
+                if self.pos >= ready {
+                    // Hold position until the separator catches up.
+                    buffering = true;
+                } else {
                     let f = self.pos as i64;
-                    let (il, ir) = Self::frame_at(&t.audio, f);
+                    let (il, ir) = Self::frame_at(audio, f);
                     bl = il * inst;
                     br = ir * inst;
-                    if let Some(g) = &t.guide {
-                        let (gl, gr) = Self::frame_at(g, f - t.guide_offset);
+                    if !guide_buf.is_empty() {
+                        let (gl, gr) = Self::frame_at(guide_buf, f - guide_offset);
                         bl += gl * guide;
                         br += gr * guide;
                     }
                     if recording {
-                        let (il, ir) = Self::frame_at(&t.audio, f - comp);
+                        let (il, ir) = Self::frame_at(audio, f - comp);
                         rl = il * inst;
                         rr = ir * inst;
                     }
@@ -736,10 +779,11 @@ impl OutputState {
             }
         }
         if let Some(rec) = &mut self.recorder {
-            if playing {
+            if playing && !buffering {
                 rec.push_slice(&self.rec_tmp);
             }
         }
+        self.shared.buffering.store(buffering, Relaxed);
         if playing && self.track.is_some() && self.pos >= len {
             self.shared.flags.playing.store(false, Relaxed);
             self.shared.ended.store(true, Relaxed);

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/screenshots/banner-eebc70f.jpg" alt="Open Karaoke: open-source karaoke with real-time autotune" width="100%" />
+<img src="docs/screenshots/banner-92906ff.jpg" alt="Open Karaoke: open-source karaoke with real-time autotune" width="100%" />
 
 # Open Karaoke
 
@@ -26,7 +26,7 @@ Free, open-source karaoke for your computer. Search any song, press start, and s
 
 Most karaoke apps are subscription services with a limited catalogue, and the free ones mostly play a lyric video. Open Karaoke takes a different approach:
 
-- 🔎 **Any song, one click.** It finds the instrumental and the synced lyrics for you.
+- 🔎 **Any song, one click.** An on-device AI pulls the vocals out of the original recording, so you sing over the real instrumental with lyrics that line up perfectly.
 - 🎤 **Real autotune, live.** Written from scratch in Rust, it corrects your pitch with a round-trip delay of about 10 ms plus your audio buffer.
 - 🧪 **A Voice Lab.** Build and save your sound before you sing.
 - 🌐 **Nothing to set up.** No account, no API keys, no plugins. All you need is an internet connection.
@@ -45,28 +45,38 @@ Or pick a file directly. These links always point to the newest version.
 | 🪟 **Windows 10/11** | [**OpenKaraoke-Windows-Setup.exe**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows-Setup.exe) · [.msi](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows.msi) | No admin rights needed. If SmartScreen appears, choose **More info → Run anyway**. |
 | 🐧 **Linux** | [**AppImage**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.AppImage) · [.deb](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.deb) · [.rpm](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.rpm) | AppImage: `chmod +x OpenKaraoke-Linux.AppImage && ./OpenKaraoke-Linux.AppImage` |
 
-<sub>The builds are not code-signed yet, which is why macOS and Windows show a warning the first time. On first launch Open Karaoke downloads two free helpers, <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> and <a href="https://deno.com">Deno</a> (about 120 MB, one time).</sub>
+<sub>The builds are not code-signed yet, which is why macOS and Windows show a warning the first time. On first launch Open Karaoke downloads what it needs, once (about 190 MB): <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>, <a href="https://deno.com">Deno</a> and the AI vocal-separation model.</sub>
+
+### System requirements
+
+| | Minimum | Recommended |
+|---|---|---|
+| OS | macOS 11, Windows 10 (64-bit), or a modern 64-bit Linux | Latest version |
+| Memory | 8 GB RAM | 16 GB RAM |
+| CPU | Any 64-bit dual-core from the last ~8 years | 4+ cores (separation runs 5–15× faster than real time) |
+| Disk | ~300 MB, plus up to 6 GB of cache (cleaned automatically) | SSD |
+| Audio | Any microphone and speakers | Headphones and a USB microphone |
 
 ## 🖼 Screenshots
 
 <table>
   <tr>
     <td width="50%"><img src="docs/screenshots/home-3aab3d1.jpg" alt="Home screen" /><p align="center"><b>Start anywhere.</b> Search any song or jump into the Voice Lab.</p></td>
-    <td width="50%"><img src="docs/screenshots/search-c108d20.jpg" alt="Search results" /><p align="center"><b>Instant search</b> across a catalogue of millions of tracks.</p></td>
+    <td width="50%"><img src="docs/screenshots/search-a10e8db.jpg" alt="Search results" /><p align="center"><b>Instant search</b> across a catalogue of millions of tracks.</p></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/screenshots/stage-76f16b6.jpg" alt="Singing on stage" /><p align="center"><b>On stage.</b> Word-by-word lyrics, your raw voice against the tuned voice on a live pitch graph, a tuner, and scoring.</p></td>
+    <td colspan="2"><img src="docs/screenshots/stage-11461b3.jpg" alt="Singing on stage" /><p align="center"><b>On stage.</b> Word-by-word lyrics, your raw voice against the tuned voice on a live pitch graph, a tuner, and scoring.</p></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/screenshots/voice-lab-38834e9.jpg" alt="Voice Lab" /><p align="center"><b>Voice Lab.</b> Record a take, loop it, switch A/B to compare, and shape your sound over a key drone.</p></td>
+    <td colspan="2"><img src="docs/screenshots/voice-lab-1774914.jpg" alt="Voice Lab" /><p align="center"><b>Voice Lab.</b> Record a take, loop it, switch A/B to compare, and shape your sound over a key drone.</p></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/screenshots/song-panel-434b1e7.jpg" alt="Song controls" /><p align="center"><b>Make the song yours.</b> Change the key and tempo, nudge lyric timing, and switch instrumental source.</p></td>
-    <td width="50%"><img src="docs/screenshots/voice-panel-f606552.jpg" alt="Vocal effects" /><p align="center"><b>Studio vocal chain.</b> Gate, EQ, de-esser, compressor, echo and reverb.</p></td>
+    <td width="50%"><img src="docs/screenshots/song-panel-c092cf9.jpg" alt="Song controls" /><p align="center"><b>Make the song yours.</b> Change the key and tempo, nudge lyric timing, and pick which recording to separate.</p></td>
+    <td width="50%"><img src="docs/screenshots/voice-panel-bacf180.jpg" alt="Vocal effects" /><p align="center"><b>Studio vocal chain.</b> Gate, EQ, de-esser, compressor, echo and reverb.</p></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/screenshots/ready-5793da1.jpg" alt="Ready to sing" /><p align="center"><b>One click to start.</b> Instrumental, lyrics and key are ready together.</p></td>
-    <td width="50%"><img src="docs/screenshots/score-9c63e47.jpg" alt="Score" /><p align="center"><b>Get graded</b> on pitch accuracy, with points and streaks.</p></td>
+    <td width="50%"><img src="docs/screenshots/separating-6488979.jpg" alt="AI vocal separation" /><p align="center"><b>Separated on your computer.</b> The AI pulls the vocals out of the original recording. You can start after 30 s; the rest finishes while you sing.</p></td>
+    <td width="50%"><img src="docs/screenshots/score-eab6731.jpg" alt="Score" /><p align="center"><b>Get graded</b> on pitch accuracy, with points and streaks.</p></td>
   </tr>
 </table>
 
@@ -76,11 +86,12 @@ Or pick a file directly. These links always point to the newest version.
 
 ### 🎵 Songs & lyrics
 - **Search anything.** The catalogue comes from the iTunes Search API, with Deezer as a fallback.
-- **Automatic instrumental finder.** Open Karaoke searches YouTube for instrumental, karaoke and backing-track versions and ranks them. It penalises covers, remixes, "slowed + reverb" edits and versions with the wrong length. You can switch to any other candidate from the **Song** tab.
-- **Vocal-remover fallback.** If no clean instrumental exists, Open Karaoke strips the centre-panned lead vocal from the original recording and keeps the bass and kick.
+- **AI vocal separation, on your computer.** Open Karaoke finds the original recording on YouTube and splits it into instrumental and vocals with [UVR](https://github.com/Anjok07/ultimatevocalremovergui)'s MDX-Net *Inst HQ 3* model, running locally on [ONNX Runtime](https://onnxruntime.ai). Nothing is uploaded, and it works for any song, even ones nobody has made a karaoke version of.
+- **Sing within seconds.** Separation streams: once the first 30 s are ready you can start, and the rest finishes while you sing (5–15× faster than real time on typical machines). On slower computers it waits for a bigger head start so you never catch up. Finished songs are cached, so next time they start instantly.
+- **Lyrics in perfect sync.** The instrumental is cut from the same recording the lyrics are timed to, so they line up by construction. You can fine-tune with `[` / `]`.
+- **Pick the recording.** The **Song** tab lists every version found. Choose another if the first has a long intro or is a live cut. A basic centre-channel vocal remover is there as an instant fallback.
 - **Time-synced lyrics** from [LRCLIB](https://lrclib.net), with a smooth word-by-word wipe, countdown dots before each verse, and support for word-timed ("enhanced") LRC.
-- **Lyric auto-sync.** Instrumentals often start a few seconds before or after the original, so lyrics would drift. Open Karaoke cross-correlates the rhythm of the two recordings to find the exact offset (accurate to a few milliseconds in tests). You can nudge the timing live with `[` / `]`.
-- **Guide vocal.** Mix in the original singer quietly while you learn a song.
+- **Guide vocal.** Mix in the *isolated* original singer, with no instruments, while you learn a song.
 - **Key & tempo change.** Shift the music ±6 semitones or play it at 70–130 % speed using [Signalsmith Stretch](https://signalsmith-audio.co.uk/code/stretch/). The autotune key follows automatically.
 
 ### 🎤 Real-time autotune
@@ -130,9 +141,10 @@ flowchart LR
     end
     subgraph Core["Rust core"]
         M[iTunes / Deezer<br/>LRCLIB]
-        Y[yt-dlp + Deno] --> D[Decode<br/>Symphonia + rubato]
-        D --> A[Analysis<br/>key · lyric alignment]
-        D --> X[Key / tempo<br/>Signalsmith]
+        Y[yt-dlp + Deno<br/>original recording] --> D[Decode<br/>Symphonia + rubato]
+        D --> AI[AI separation<br/>MDX-Net on ONNX Runtime]
+        AI --> A[Key detection]
+        AI --> X[Key / tempo<br/>Signalsmith]
         X --> O((Output))
         MIC((Mic)) --> C[Vocal chain]
         C --> O
@@ -155,7 +167,7 @@ mic → low-cut → gate → McLeod pitch detector (every 4 ms)
 - **Pitch detection** uses the McLeod Pitch Method with FFT autocorrelation, from 65 Hz to 1.2 kHz, accurate to under 5 cents in tests.
 - **Pitch shifting** uses pitch-synchronous overlap-add (TD-PSOLA). Grains are taken one pitch period apart, so the spectral envelope of your voice is preserved: you sound corrected, not like a chipmunk. Formant shifting resamples the grains independently of pitch.
 - **Key detection** compares a whole-song chromagram with the Krumhansl–Kessler key profiles.
-- **Lyric alignment** cross-correlates the spectral-flux onset envelopes of the instrumental and the original recording.
+- **Vocal separation** runs the MDX-Net model on overlapping 6-second chunks of the song's spectrogram (a PyTorch-compatible STFT written in Rust), keeping each chunk's clean centre. Finished chunks stream into a lock-free buffer that the audio thread plays from while the rest is still being separated.
 
 **Why Rust and not a browser audio stack?** You hear your own voice through the app. A browser audio stack typically adds 30–50 ms of round-trip delay, which is enough to throw off your timing. Native audio through [cpal](https://github.com/RustAudio/cpal), plus a lock-free design, keeps that delay low.
 
@@ -189,12 +201,13 @@ src-tauri/src/
   audio/chain.rs        complete vocal chain and autotune controller
   audio/pitch.rs        McLeod pitch detector
   audio/psola.rs        TD-PSOLA pitch/formant shifter
-  audio/analysis.rs     key detection, lyric alignment, vocal remover
+  audio/separate.rs     AI vocal separation (MDX-Net, STFT, streaming buffer)
+  audio/analysis.rs     key detection, basic vocal remover
   audio/stretch.rs      key/tempo change (Signalsmith Stretch)
   audio/decode.rs       Symphonia decoding + rubato resampling
   youtube.rs            search & download through yt-dlp
   meta.rs               iTunes/Deezer search, LRCLIB lyrics
-  tools.rs              first-run install of yt-dlp + Deno
+  tools.rs              first-run install of yt-dlp, Deno and the AI model (SHA-256 verified)
 docs/                   download page (GitHub Pages) and screenshots
 ```
 </details>
@@ -227,13 +240,19 @@ Open **Audio setup** (the sliders icon) and lower the buffer size to 128 or 64. 
 <details>
 <summary><b>The lyrics are a little early or late.</b></summary>
 
-Open Karaoke aligns them automatically when it can. Otherwise press `[` or `]` while singing to nudge them in 0.1 s steps.
+They should line up on their own, because the music is separated from the same recording the lyrics are timed to. If a lyrics file itself is slightly off, press `[` or `]` while singing to nudge it in 0.1 s steps. If it's way off, the chosen recording may be a different edit (a music video with an intro, for example): pick another in the **Song** tab.
 </details>
 
 <details>
-<summary><b>The instrumental it picked isn't great.</b></summary>
+<summary><b>I can still hear some of the original vocals.</b></summary>
 
-Open the **Song** tab and choose another source. Every candidate is listed, along with the vocal remover.
+AI separation is very good but not perfect. Faint traces can remain on heavily processed vocals, especially reverb tails and backing harmonies. Turn up the instrumental and your own voice in **Mix**, or try another recording of the song in the **Song** tab.
+</details>
+
+<details>
+<summary><b>Will the AI separation work on my computer?</b></summary>
+
+It runs on any 64-bit Mac, Windows or Linux PC with 8 GB of RAM. While a song is being separated it briefly uses about 4 GB of memory, so close heavy apps on 8 GB machines. Speed depends on the processor: a recent laptop separates a 4-minute song in under a minute, and older ones take a few minutes. You can start singing long before it finishes either way.
 </details>
 
 <details>
@@ -251,7 +270,7 @@ In `Music/Open Karaoke` inside your home folder. The folder button in the Voice 
 ## 🗺 Roadmap
 
 - [ ] Melody-guided scoring (compare against the original vocal line, not only the key)
-- [ ] AI stem separation (on-device) for songs without instrumentals
+- [ ] GPU acceleration for separation (CoreML / DirectML)
 - [ ] Duet mode with two microphones
 - [ ] Playlists and a party queue
 - [ ] Interface translations
@@ -269,7 +288,7 @@ Ideas and pull requests are welcome. Open an [issue](https://github.com/osmanahm
 ## 🙏 Acknowledgements
 
 Open Karaoke stands on the shoulders of great open-source projects and free services:
-[Tauri](https://tauri.app) · [cpal](https://github.com/RustAudio/cpal) · [Symphonia](https://github.com/pdeljanov/Symphonia) · [rubato](https://github.com/HEnquist/rubato) · [RustFFT](https://github.com/ejmahler/RustFFT) · [Signalsmith Stretch](https://github.com/Signalsmith-Audio/signalsmith-stretch) · [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [Deno](https://deno.com) · [LRCLIB](https://lrclib.net) · [iTunes Search API](https://performance-partners.apple.com/search-api) · [Deezer API](https://developers.deezer.com) · [React](https://react.dev) · [Zustand](https://github.com/pmndrs/zustand)
+[Tauri](https://tauri.app) · [cpal](https://github.com/RustAudio/cpal) · [Symphonia](https://github.com/pdeljanov/Symphonia) · [rubato](https://github.com/HEnquist/rubato) · [RustFFT](https://github.com/ejmahler/RustFFT) · [Signalsmith Stretch](https://github.com/Signalsmith-Audio/signalsmith-stretch) · [Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui) & the MDX-Net model authors · [ONNX Runtime](https://onnxruntime.ai) · [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [Deno](https://deno.com) · [LRCLIB](https://lrclib.net) · [iTunes Search API](https://performance-partners.apple.com/search-api) · [Deezer API](https://developers.deezer.com) · [React](https://react.dev) · [Zustand](https://github.com/pmndrs/zustand)
 
 ## ⚖️ Legal
 
