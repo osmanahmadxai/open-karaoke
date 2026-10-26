@@ -1,7 +1,7 @@
 {
   "name": "open-karaoke",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Open-source karaoke studio with real-time autotune",
   "license": "MIT",
   "type": "module",
