@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Croonly — open-source karaoke with real-time autotune</title>
+    <meta name="description" content="Free, open-source karaoke for macOS, Windows and Linux. Search any song, sing over the instrumental with synced lyrics and a real-time autotune." />
+    <link rel="icon" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0b0a10;
+        --panel: #15121e;
+        --line: rgba(255, 255, 255, 0.09);
+        --text: #f5f2fb;
+        --muted: #9b94ad;
+        --grad: linear-gradient(120deg, #ff3d7f 0%, #c13cf0 55%, #7c3aed 100%);
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: radial-gradient(ellipse at 15% -10%, rgba(193, 60, 240, 0.28), transparent 55%),
+          radial-gradient(ellipse at 95% 10%, rgba(255, 61, 127, 0.18), transparent 50%);
+      }
+      a { color: inherit; }
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+      header { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+      .brand { display: flex; align-items: center; gap: 10px; font: 800 20px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; text-decoration: none; }
+      .brand img { width: 34px; height: 34px; }
+      .gh { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 15px; }
+      .gh:hover { color: var(--text); }
+      .hero { padding: 70px 0 40px; text-align: center; }
+      h1 {
+        font: 800 clamp(40px, 7vw, 80px)/0.98 "Bricolage Grotesque", sans-serif;
+        letter-spacing: -0.045em;
+        margin: 0 auto 22px;
+        max-width: 860px;
+      }
+      h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .lead { color: var(--muted); font-size: clamp(17px, 2vw, 20px); max-width: 640px; margin: 0 auto 36px; }
+      .dl {
+        display: inline-flex; align-items: center; gap: 12px;
+        padding: 18px 34px; border-radius: 18px;
+        background: var(--grad); color: white; text-decoration: none;
+        font-weight: 600; font-size: 19px;
+        box-shadow: 0 16px 50px -14px rgba(255, 61, 127, 0.75);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .dl:hover { transform: translateY(-2px); box-shadow: 0 20px 60px -12px rgba(255, 61, 127, 0.9); }
+      .dl svg { width: 22px; height: 22px; }
+      .dl.disabled { opacity: 0.5; pointer-events: none; }
+      .meta { margin-top: 14px; color: var(--muted); font-size: 14px; }
+      .others { margin-top: 10px; font-size: 14px; color: var(--muted); }
+      .others a { color: var(--text); margin: 0 6px; }
+      .platforms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 20px; }
+      .plat { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+      .plat.me { border-color: rgba(193, 60, 240, 0.6); box-shadow: 0 0 0 1px rgba(193, 60, 240, 0.3) inset; }
+      .plat h3 { margin: 0 0 4px; font: 700 20px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
+      .plat .req { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+      .plat a.file {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 12px; margin-top: 8px; border-radius: 11px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+        text-decoration: none; font-weight: 600; font-size: 14px;
+      }
+      .plat a.file:hover { background: rgba(255, 255, 255, 0.09); }
+      .plat a.file span { color: var(--muted); font-weight: 500; font-size: 12.5px; }
+      .plat .note { margin-top: 14px; color: var(--muted); font-size: 13px; }
+      code { background: rgba(255, 255, 255, 0.08); padding: 1px 6px; border-radius: 6px; font-size: 12.5px; }
+      .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 70px 0; }
+      .feat { padding: 22px; border-radius: 18px; border: 1px solid var(--line); background: rgba(21, 18, 30, 0.6); }
+      .feat b { display: block; font: 700 18px "Bricolage Grotesque", sans-serif; margin-bottom: 6px; letter-spacing: -0.01em; }
+      .feat p { margin: 0; color: var(--muted); font-size: 14.5px; }
+      .feat i { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: var(--grad); margin-bottom: 14px; font-style: normal; font-size: 18px; }
+      footer { border-top: 1px solid var(--line); padding: 28px 0 50px; color: var(--muted); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+      @media (max-width: 820px) {
+        .platforms, .features { grid-template-columns: 1fr; }
+        .hero { padding-top: 40px; }
+        .dl { padding: 16px 24px; font-size: 17px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a class="brand" href="./"><img src="icon.png" alt="" />Croonly</a>
+        <a class="gh" id="repo-link" href="https://github.com/osmanahmadxai/croonly">GitHub ↗</a>
+      </header>
+
+      <section class="hero">
+        <h1>Sing <em>anything</em>.<br />Sound incredible.</h1>
+        <p class="lead">
+          Free, open-source karaoke for your computer. Search any song, hit start, and sing over the instrumental with synced lyrics and a
+          real-time autotune. All you need is an internet connection.
+        </p>
+        <a class="dl" id="main-dl" href="#downloads">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+          <span id="main-label">Download Croonly</span>
+        </a>
+        <div class="meta" id="meta">Free · Open source (MIT) · macOS, Windows &amp; Linux</div>
+        <div class="others" id="others"></div>
+      </section>
+
+      <section class="platforms" id="downloads">
+        <div class="plat" data-os="mac">
+          <h3>macOS</h3>
+          <div class="req">macOS 11 or later · Apple Silicon &amp; Intel</div>
+          <a class="file" data-asset="Croonly-macOS.dmg" href="#">Croonly-macOS.dmg <span>Disk image</span></a>
+          <div class="note">First launch: right-click Croonly in Applications and choose <b>Open</b>. If macOS still refuses, run <code>xattr -cr /Applications/Croonly.app</code> in Terminal.</div>
+        </div>
+        <div class="plat" data-os="windows">
+          <h3>Windows</h3>
+          <div class="req">Windows 10 or 11 · 64-bit</div>
+          <a class="file" data-asset="Croonly-Windows-Setup.exe" href="#">Croonly-Windows-Setup.exe <span>Installer</span></a>
+          <a class="file" data-asset="Croonly-Windows.msi" href="#">Croonly-Windows.msi <span>MSI package</span></a>
+          <div class="note">If SmartScreen appears, click <b>More info → Run anyway</b>. No admin rights needed.</div>
+        </div>
+        <div class="plat" data-os="linux">
+          <h3>Linux</h3>
+          <div class="req">x86-64 · any modern distro</div>
+          <a class="file" data-asset="Croonly-Linux.AppImage" href="#">Croonly-Linux.AppImage <span>Any distro</span></a>
+          <a class="file" data-asset="Croonly-Linux.deb" href="#">Croonly-Linux.deb <span>Ubuntu / Debian</span></a>
+          <a class="file" data-asset="Croonly-Linux.rpm" href="#">Croonly-Linux.rpm <span>Fedora / openSUSE</span></a>
+          <div class="note">AppImage: <code>chmod +x Croonly-Linux.AppImage</code> then run it.</div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="feat"><i>🔎</i><b>Any song, one click</b><p>Croonly finds the best instrumental automatically, or strips the vocals itself when there isn't one.</p></div>
+        <div class="feat"><i>🎤</i><b>Real-time autotune</b><p>Low-latency pitch correction with retune speed, humanize, flex-tune, vibrato, formant control and harmonies.</p></div>
+        <div class="feat"><i>📜</i><b>Lyrics that keep up</b><p>Synced, word-by-word lyrics, automatically aligned to the instrumental you're singing over.</p></div>
+        <div class="feat"><i>🧪</i><b>Voice Lab</b><p>Record a take, loop it and dial in your sound before you sing, then save it as your own preset.</p></div>
+        <div class="feat"><i>🎚️</i><b>Studio vocal chain</b><p>Gate, EQ, de-esser, compressor, echo and reverb, plus key and tempo changes for the music.</p></div>
+        <div class="feat"><i>⏺️</i><b>Record &amp; score</b><p>Save your performance as a WAV with latency compensation, and get scored on your pitch accuracy.</p></div>
+      </section>
+
+      <footer>
+        <span>Croonly is free software under the MIT license. It streams content at your request and hosts nothing itself.</span>
+        <span><a href="https://github.com/osmanahmadxai/croonly">Source code</a> · <a href="https://github.com/osmanahmadxai/croonly/releases">All releases</a></span>
+      </footer>
+    </div>
+
+    <script>
+      const REPO = "osmanahmadxai/croonly";
+      const latest = (asset) => `https://github.com/${REPO}/releases/latest/download/${asset}`;
+      const PRIMARY = {
+        mac: { asset: "Croonly-macOS.dmg", label: "Download for macOS" },
+        windows: { asset: "Croonly-Windows-Setup.exe", label: "Download for Windows" },
+        linux: { asset: "Croonly-Linux.AppImage", label: "Download for Linux" },
+      };
+      const NAMES = { mac: "macOS", windows: "Windows", linux: "Linux" };
+
+      function detectOS() {
+        const p = (navigator.userAgentData?.platform || navigator.platform || "").toLowerCase();
+        const ua = navigator.userAgent.toLowerCase();
+        if (/iphone|ipad|android/.test(ua)) return null;
+        if (p.includes("mac") || ua.includes("mac os")) return "mac";
+        if (p.includes("win") || ua.includes("windows")) return "windows";
+        if (p.includes("linux") || ua.includes("linux") || ua.includes("x11")) return "linux";
+        return null;
+      }
+
+      document.querySelectorAll("[data-asset]").forEach((a) => (a.href = latest(a.dataset.asset)));
+
+      const os = detectOS();
+      const main = document.getElementById("main-dl");
+      if (os) {
+        main.href = latest(PRIMARY[os].asset);
+        document.getElementById("main-label").textContent = PRIMARY[os].label;
+        document.querySelector(`.plat[data-os="${os}"]`).classList.add("me");
+        document.getElementById("others").innerHTML =
+          "Other platforms:" +
+          Object.keys(PRIMARY)
+            .filter((k) => k !== os)
+            .map((k) => `<a href="#downloads">${NAMES[k]}</a>`)
+            .join("");
+      } else {
+        document.getElementById("main-label").textContent = "Choose your platform";
+        document.getElementById("others").textContent = "Croonly is a desktop app for macOS, Windows and Linux.";
+      }
+
+      // Show the current version, or a notice while the first build runs.
+      fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((rel) => {
+          const date = new Date(rel.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+          document.getElementById("meta").textContent = `Version ${rel.tag_name.replace(/^v/, "")} · ${date} · Free & open source (MIT)`;
+        })
+        .catch((status) => {
+          if (status === 404) {
+            main.classList.add("disabled");
+            document.getElementById("meta").textContent = "The first release is being built right now. Check back in a few minutes.";
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+name: Build installers
+
+# Push a tag like v0.1.0 to publish a (draft) GitHub release with installers
+# for every platform. Run it manually from the Actions tab to just build them
+# and download the installers as workflow artifacts.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS (Apple Silicon + Intel)
+            platform: macos-latest
+            args: --target universal-apple-darwin
+            bundles: src-tauri/target/universal-apple-darwin/release/bundle
+          - name: Windows
+            platform: windows-latest
+            args: ""
+            bundles: src-tauri/target/release/bundle
+          - name: Linux
+            platform: ubuntu-22.04
+            args: ""
+            bundles: src-tauri/target/release/bundle
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev libclang-dev rpm
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - run: npm ci
+
+      - name: DSP tests
+        if: runner.os == 'Linux'
+        working-directory: src-tauri
+        run: cargo test --lib
+
+      - name: Build and publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: Croonly ${{ github.ref_name }}
+          releaseBody: |
+            Download the installer for your computer:
+            **Easiest:** use the download page, https://osmanahmadxai.github.io/croonly/, which picks the right file for you.
+
+            - **macOS** (Apple Silicon + Intel): `Croonly-macOS.dmg`. The first time, right-click the app and choose **Open**, because builds are not notarized.
+            - **Windows**: `Croonly-Windows-Setup.exe` (or `.msi`). If SmartScreen appears, choose **More info → Run anyway**.
+            - **Linux**: `Croonly-Linux.AppImage` (any distro), `.deb` (Ubuntu/Debian) or `.rpm` (Fedora)
+          releaseDraft: false
+          args: ${{ matrix.args }}
+
+      # Fixed file names let the download page link to
+      # releases/latest/download/<name> for every version.
+      - name: Attach stable download names
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          B="${{ matrix.bundles }}"
+          mkdir -p stable
+          case "$RUNNER_OS" in
+            macOS)
+              cp "$B"/dmg/*.dmg stable/Croonly-macOS.dmg ;;
+            Windows)
+              cp "$B"/nsis/*-setup.exe stable/Croonly-Windows-Setup.exe
+              cp "$B"/msi/*.msi stable/Croonly-Windows.msi ;;
+            Linux)
+              cp "$B"/appimage/*.AppImage stable/Croonly-Linux.AppImage
+              cp "$B"/deb/*.deb stable/Croonly-Linux.deb
+              cp "$B"/rpm/*.rpm stable/Croonly-Linux.rpm ;;
+          esac
+          gh release upload "${{ github.ref_name }}" stable/* --clobber
+
+      - name: Build installers
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        run: npm run tauri build -- ${{ matrix.args }}
+
+      - name: Upload installers
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        uses: actions/upload-artifact@v4
+        with:
+          name: Croonly-${{ runner.os }}
+          if-no-files-found: error
+          path: |
+            ${{ matrix.bundles }}/dmg/*.dmg
+            ${{ matrix.bundles }}/nsis/*.exe
+            ${{ matrix.bundles }}/msi/*.msi
+            ${{ matrix.bundles }}/appimage/*.AppImage
+            ${{ matrix.bundles }}/deb/*.deb
+            ${{ matrix.bundles }}/rpm/*.rpm
