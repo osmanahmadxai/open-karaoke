@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/screenshots/banner.jpg" alt="Open Karaoke: open-source karaoke with real-time autotune" width="100%" />
+<img src="docs/screenshots/open-karaoke-banner.jpg" alt="Open Karaoke: open-source karaoke with real-time autotune" width="100%" />
 
 # Open Karaoke
 
@@ -51,22 +51,22 @@ Or pick a file directly. These links always point to the newest version.
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/home.jpg" alt="Home screen" /><p align="center"><b>Start anywhere.</b> Search any song or jump into the Voice Lab.</p></td>
-    <td width="50%"><img src="docs/screenshots/search.jpg" alt="Search results" /><p align="center"><b>Instant search</b> across a catalogue of millions of tracks.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-home.jpg" alt="Home screen" /><p align="center"><b>Start anywhere.</b> Search any song or jump into the Voice Lab.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-search.jpg" alt="Search results" /><p align="center"><b>Instant search</b> across a catalogue of millions of tracks.</p></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/screenshots/stage.jpg" alt="Singing on stage" /><p align="center"><b>On stage.</b> Word-by-word lyrics, your raw voice against the tuned voice on a live pitch graph, a tuner, and scoring.</p></td>
+    <td colspan="2"><img src="docs/screenshots/open-karaoke-stage.jpg" alt="Singing on stage" /><p align="center"><b>On stage.</b> Word-by-word lyrics, your raw voice against the tuned voice on a live pitch graph, a tuner, and scoring.</p></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/screenshots/voice-lab.jpg" alt="Voice Lab" /><p align="center"><b>Voice Lab.</b> Record a take, loop it, switch A/B to compare, and shape your sound over a key drone.</p></td>
+    <td colspan="2"><img src="docs/screenshots/open-karaoke-voice-lab.jpg" alt="Voice Lab" /><p align="center"><b>Voice Lab.</b> Record a take, loop it, switch A/B to compare, and shape your sound over a key drone.</p></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/screenshots/song-panel.jpg" alt="Song controls" /><p align="center"><b>Make the song yours.</b> Change the key and tempo, nudge lyric timing, and switch instrumental source.</p></td>
-    <td width="50%"><img src="docs/screenshots/voice-panel.jpg" alt="Vocal effects" /><p align="center"><b>Studio vocal chain.</b> Gate, EQ, de-esser, compressor, echo and reverb.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-song-panel.jpg" alt="Song controls" /><p align="center"><b>Make the song yours.</b> Change the key and tempo, nudge lyric timing, and switch instrumental source.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-voice-panel.jpg" alt="Vocal effects" /><p align="center"><b>Studio vocal chain.</b> Gate, EQ, de-esser, compressor, echo and reverb.</p></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/screenshots/ready.jpg" alt="Ready to sing" /><p align="center"><b>One click to start.</b> Instrumental, lyrics and key are ready together.</p></td>
-    <td width="50%"><img src="docs/screenshots/score.jpg" alt="Score" /><p align="center"><b>Get graded</b> on pitch accuracy, with points and streaks.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-ready.jpg" alt="Ready to sing" /><p align="center"><b>One click to start.</b> Instrumental, lyrics and key are ready together.</p></td>
+    <td width="50%"><img src="docs/screenshots/open-karaoke-score.jpg" alt="Score" /><p align="center"><b>Get graded</b> on pitch accuracy, with points and streaks.</p></td>
   </tr>
 </table>
 
