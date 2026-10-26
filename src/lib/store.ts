@@ -48,12 +48,12 @@ export interface AudioPrefs {
   buffer: number | null;
 }
 
-const PERSIST_KEY = "croonly.params.v1";
-const PREFS_KEY = "croonly.audio.v1";
-const HISTORY_KEY = "croonly.history.v1";
+const PERSIST_KEY = "openkaraoke.params.v1";
+const PREFS_KEY = "openkaraoke.audio.v1";
+const HISTORY_KEY = "openkaraoke.history.v1";
 // Per-song values that should not survive a restart.
 const TRANSIENT = new Set(["tune_key", "tune_scale", "drone"]);
-const MY_PRESETS_KEY = "croonly.mypresets.v1";
+const MY_PRESETS_KEY = "openkaraoke.mypresets.v1";
 
 export interface MyPreset {
   name: string;

@@ -1,17 +1,17 @@
 <div align="center">
 
-<img src="docs/screenshots/banner.jpg" alt="Croonly: open-source karaoke with real-time autotune" width="100%" />
+<img src="docs/screenshots/banner.jpg" alt="Open Karaoke: open-source karaoke with real-time autotune" width="100%" />
 
-# Croonly
+# Open Karaoke
 
 **Sing anything. Sound incredible.**
 
 Free, open-source karaoke for your computer. Search any song, press start, and sing over the instrumental with synced lyrics and a real-time autotune.
 
-[![Download](https://img.shields.io/badge/⬇_Download-Croonly-ff3d7f?style=for-the-badge)](https://osmanahmadxai.github.io/croonly/)
+[![Download](https://img.shields.io/badge/⬇_Download-OpenKaraoke-ff3d7f?style=for-the-badge)](https://osmanahmadxai.github.io/open-karaoke/)
 
-[![Latest release](https://img.shields.io/github/v/release/osmanahmadxai/croonly?color=c13cf0&label=release)](https://github.com/osmanahmadxai/croonly/releases/latest)
-[![Build](https://img.shields.io/github/actions/workflow/status/osmanahmadxai/croonly/release.yml?label=build)](https://github.com/osmanahmadxai/croonly/actions)
+[![Latest release](https://img.shields.io/github/v/release/osmanahmadxai/open-karaoke?color=c13cf0&label=release)](https://github.com/osmanahmadxai/open-karaoke/releases/latest)
+[![Build](https://img.shields.io/github/actions/workflow/status/osmanahmadxai/open-karaoke/release.yml?label=build)](https://github.com/osmanahmadxai/open-karaoke/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-7c3aed)](LICENSE)
 ![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-555)
 ![Built with](https://img.shields.io/badge/built%20with-Rust%20%2B%20Tauri%20%2B%20React-orange)
@@ -22,9 +22,9 @@ Free, open-source karaoke for your computer. Search any song, press start, and s
 
 ---
 
-## ✨ Why Croonly?
+## ✨ Why Open Karaoke?
 
-Most karaoke apps are subscription services with a limited catalogue, and the free ones mostly play a lyric video. Croonly takes a different approach:
+Most karaoke apps are subscription services with a limited catalogue, and the free ones mostly play a lyric video. Open Karaoke takes a different approach:
 
 - 🔎 **Any song, one click.** It finds the instrumental and the synced lyrics for you.
 - 🎤 **Real autotune, live.** Written from scratch in Rust, it corrects your pitch with a round-trip delay of about 10 ms plus your audio buffer.
@@ -34,18 +34,18 @@ Most karaoke apps are subscription services with a limited catalogue, and the fr
 
 ## ⬇ Download
 
-> ### **[osmanahmadxai.github.io/croonly](https://osmanahmadxai.github.io/croonly/)**
+> ### **[osmanahmadxai.github.io/open-karaoke](https://osmanahmadxai.github.io/open-karaoke/)**
 > One link for every platform. It detects your computer and gives you the right installer.
 
 Or pick a file directly. These links always point to the newest version.
 
 | | Installer | Notes |
 |---|---|---|
-| 🍎 **macOS 11+**<br><sub>Apple Silicon & Intel</sub> | [**Croonly-macOS.dmg**](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-macOS.dmg) | Open the DMG and drag Croonly to Applications. The first time, **right-click → Open**. |
-| 🪟 **Windows 10/11** | [**Croonly-Windows-Setup.exe**](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-Windows-Setup.exe) · [.msi](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-Windows.msi) | No admin rights needed. If SmartScreen appears, choose **More info → Run anyway**. |
-| 🐧 **Linux** | [**AppImage**](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-Linux.AppImage) · [.deb](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-Linux.deb) · [.rpm](https://github.com/osmanahmadxai/croonly/releases/latest/download/Croonly-Linux.rpm) | AppImage: `chmod +x Croonly-Linux.AppImage && ./Croonly-Linux.AppImage` |
+| 🍎 **macOS 11+**<br><sub>Apple Silicon & Intel</sub> | [**OpenKaraoke-macOS.dmg**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-macOS.dmg) | Open the DMG and drag Open Karaoke to Applications. The first time, **right-click → Open**. |
+| 🪟 **Windows 10/11** | [**OpenKaraoke-Windows-Setup.exe**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows-Setup.exe) · [.msi](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows.msi) | No admin rights needed. If SmartScreen appears, choose **More info → Run anyway**. |
+| 🐧 **Linux** | [**AppImage**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.AppImage) · [.deb](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.deb) · [.rpm](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.rpm) | AppImage: `chmod +x OpenKaraoke-Linux.AppImage && ./OpenKaraoke-Linux.AppImage` |
 
-<sub>The builds are not code-signed yet, which is why macOS and Windows show a warning the first time. On first launch Croonly downloads two free helpers, <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> and <a href="https://deno.com">Deno</a> (about 120 MB, one time).</sub>
+<sub>The builds are not code-signed yet, which is why macOS and Windows show a warning the first time. On first launch Open Karaoke downloads two free helpers, <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> and <a href="https://deno.com">Deno</a> (about 120 MB, one time).</sub>
 
 ## 🖼 Screenshots
 
@@ -70,16 +70,16 @@ Or pick a file directly. These links always point to the newest version.
   </tr>
 </table>
 
-<sub>Screenshots use made-up demo songs and placeholder lyrics.</sub>
+<sub>Screenshots use demo data with placeholder artwork. Lyrics are fetched live inside the app, so none appear here.</sub>
 
 ## 🎛 Features
 
 ### 🎵 Songs & lyrics
 - **Search anything.** The catalogue comes from the iTunes Search API, with Deezer as a fallback.
-- **Automatic instrumental finder.** Croonly searches YouTube for instrumental, karaoke and backing-track versions and ranks them. It penalises covers, remixes, "slowed + reverb" edits and versions with the wrong length. You can switch to any other candidate from the **Song** tab.
-- **Vocal-remover fallback.** If no clean instrumental exists, Croonly strips the centre-panned lead vocal from the original recording and keeps the bass and kick.
+- **Automatic instrumental finder.** Open Karaoke searches YouTube for instrumental, karaoke and backing-track versions and ranks them. It penalises covers, remixes, "slowed + reverb" edits and versions with the wrong length. You can switch to any other candidate from the **Song** tab.
+- **Vocal-remover fallback.** If no clean instrumental exists, Open Karaoke strips the centre-panned lead vocal from the original recording and keeps the bass and kick.
 - **Time-synced lyrics** from [LRCLIB](https://lrclib.net), with a smooth word-by-word wipe, countdown dots before each verse, and support for word-timed ("enhanced") LRC.
-- **Lyric auto-sync.** Instrumentals often start a few seconds before or after the original, so lyrics would drift. Croonly cross-correlates the rhythm of the two recordings to find the exact offset (accurate to a few milliseconds in tests). You can nudge the timing live with `[` / `]`.
+- **Lyric auto-sync.** Instrumentals often start a few seconds before or after the original, so lyrics would drift. Open Karaoke cross-correlates the rhythm of the two recordings to find the exact offset (accurate to a few milliseconds in tests). You can nudge the timing live with `[` / `]`.
 - **Guide vocal.** Mix in the original singer quietly while you learn a song.
 - **Key & tempo change.** Shift the music ±6 semitones or play it at 70–130 % speed using [Signalsmith Stretch](https://signalsmith-audio.co.uk/code/stretch/). The autotune key follows automatically.
 
@@ -110,7 +110,7 @@ Noise gate (with hold) · low-cut · three-band EQ (warmth, presence, air) · sp
 ### 🏆 Performance
 - **Live pitch graph** with scale-note lanes and a tuner readout.
 - **Scoring:** pitch accuracy, points, streaks and a grade at the end of the song.
-- **Recording** of the full mix to 24-bit WAV in `Music/Croonly`, with automatic latency compensation so your voice lines up with the music.
+- **Recording** of the full mix to 24-bit WAV in `Music/Open Karaoke`, with automatic latency compensation so your voice lines up with the music.
 - **Fullscreen stage mode** for parties.
 
 ### ⌨️ Keyboard shortcuts
@@ -164,8 +164,8 @@ mic → low-cut → gate → McLeod pitch detector (every 4 ms)
 **Requirements:** [Rust](https://rustup.rs) (stable), Node.js 20+, and the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for your OS. On Linux you also need `libasound2-dev` and `libclang-dev`.
 
 ```bash
-git clone https://github.com/osmanahmadxai/croonly.git
-cd croonly
+git clone https://github.com/osmanahmadxai/open-karaoke.git
+cd open-karaoke
 npm install
 npm run app        # run in development mode with hot reload
 npm run dist       # build installers for your OS → src-tauri/target/release/bundle/
@@ -207,7 +207,7 @@ docs/                   download page (GitHub Pages) and screenshots
    ```bash
    git tag v0.2.0 && git push origin v0.2.0
    ```
-3. GitHub Actions builds macOS (universal), Windows and Linux installers, publishes the release, and attaches files with fixed names so that the [download page](https://osmanahmadxai.github.io/croonly/) always serves the newest version.
+3. GitHub Actions builds macOS (universal), Windows and Linux installers, publishes the release, and attaches files with fixed names so that the [download page](https://osmanahmadxai.github.io/open-karaoke/) always serves the newest version.
 </details>
 
 ## ❓ FAQ
@@ -227,7 +227,7 @@ Open **Audio setup** (the sliders icon) and lower the buffer size to 128 or 64. 
 <details>
 <summary><b>The lyrics are a little early or late.</b></summary>
 
-Croonly aligns them automatically when it can. Otherwise press `[` or `]` while singing to nudge them in 0.1 s steps.
+Open Karaoke aligns them automatically when it can. Otherwise press `[` or `]` while singing to nudge them in 0.1 s steps.
 </details>
 
 <details>
@@ -239,13 +239,13 @@ Open the **Song** tab and choose another source. Every candidate is listed, alon
 <details>
 <summary><b>macOS says the app "can't be opened" or "is damaged".</b></summary>
 
-The builds aren't notarized by Apple yet. Right-click Croonly in Applications and choose **Open**. If that doesn't work, run `xattr -cr /Applications/Croonly.app` in Terminal.
+The builds aren't notarized by Apple yet. Right-click Open Karaoke in Applications and choose **Open**. If that doesn't work, run `xattr -cr "/Applications/Open Karaoke.app"` in Terminal.
 </details>
 
 <details>
 <summary><b>Where are my recordings?</b></summary>
 
-In `Music/Croonly` inside your home folder. The folder button in the Voice Lab opens it.
+In `Music/Open Karaoke` inside your home folder. The folder button in the Voice Lab opens it.
 </details>
 
 ## 🗺 Roadmap
@@ -257,7 +257,7 @@ In `Music/Croonly` inside your home folder. The folder button in the Voice Lab o
 - [ ] Interface translations
 - [ ] Signed and notarized builds
 
-Ideas and pull requests are welcome. Open an [issue](https://github.com/osmanahmadxai/croonly/issues) to discuss bigger changes.
+Ideas and pull requests are welcome. Open an [issue](https://github.com/osmanahmadxai/open-karaoke/issues) to discuss bigger changes.
 
 ## 🤝 Contributing
 
@@ -268,13 +268,13 @@ Ideas and pull requests are welcome. Open an [issue](https://github.com/osmanahm
 
 ## 🙏 Acknowledgements
 
-Croonly stands on the shoulders of great open-source projects and free services:
+Open Karaoke stands on the shoulders of great open-source projects and free services:
 [Tauri](https://tauri.app) · [cpal](https://github.com/RustAudio/cpal) · [Symphonia](https://github.com/pdeljanov/Symphonia) · [rubato](https://github.com/HEnquist/rubato) · [RustFFT](https://github.com/ejmahler/RustFFT) · [Signalsmith Stretch](https://github.com/Signalsmith-Audio/signalsmith-stretch) · [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [Deno](https://deno.com) · [LRCLIB](https://lrclib.net) · [iTunes Search API](https://performance-partners.apple.com/search-api) · [Deezer API](https://developers.deezer.com) · [React](https://react.dev) · [Zustand](https://github.com/pmndrs/zustand)
 
 ## ⚖️ Legal
 
-Croonly is a player. It fetches audio and lyrics on the user's request from third-party services and does not host or redistribute any content. You are responsible for following the terms of service of those platforms and the copyright laws in your country. Recordings you make are for personal use.
+Open Karaoke is a player. It fetches audio and lyrics on the user's request from third-party services and does not host or redistribute any content. You are responsible for following the terms of service of those platforms and the copyright laws in your country. Recordings you make are for personal use.
 
 ## 📄 License
 
-[MIT](LICENSE) © 2026 Croonly contributors
+[MIT](LICENSE) © 2026 Open Karaoke contributors

@@ -44,7 +44,7 @@ export function Setup() {
           <Mic />
         </div>
         <h1>Setting up your stage</h1>
-        <p>Croonly is downloading two free open-source helpers it uses to fetch music. This happens once and takes about a minute.</p>
+        <p>Open Karaoke is downloading two free open-source helpers it uses to fetch music. This happens once and takes about a minute.</p>
         <div className="progress">
           <div style={{ width: `${overall * 100}%` }} />
         </div>

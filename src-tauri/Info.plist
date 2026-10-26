@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
   <key>NSMicrophoneUsageDescription</key>
-  <string>Croonly listens to your microphone so you can sing along, with autotune and effects applied in real time.</string>
+  <string>Open Karaoke listens to your microphone so you can sing along, with autotune and effects applied in real time.</string>
 </dict>
 </plist>

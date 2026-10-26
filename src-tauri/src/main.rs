@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    croonly_lib::run()
+    open_karaoke_lib::run()
 }

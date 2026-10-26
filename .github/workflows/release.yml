@@ -66,14 +66,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: Croonly ${{ github.ref_name }}
+          releaseName: Open Karaoke ${{ github.ref_name }}
           releaseBody: |
             Download the installer for your computer:
-            **Easiest:** use the download page, https://osmanahmadxai.github.io/croonly/, which picks the right file for you.
+            **Easiest:** use the download page, https://osmanahmadxai.github.io/open-karaoke/, which picks the right file for you.
 
-            - **macOS** (Apple Silicon + Intel): `Croonly-macOS.dmg`. The first time, right-click the app and choose **Open**, because builds are not notarized.
-            - **Windows**: `Croonly-Windows-Setup.exe` (or `.msi`). If SmartScreen appears, choose **More info → Run anyway**.
-            - **Linux**: `Croonly-Linux.AppImage` (any distro), `.deb` (Ubuntu/Debian) or `.rpm` (Fedora)
+            - **macOS** (Apple Silicon + Intel): `OpenKaraoke-macOS.dmg`. The first time, right-click the app and choose **Open**, because builds are not notarized.
+            - **Windows**: `OpenKaraoke-Windows-Setup.exe` (or `.msi`). If SmartScreen appears, choose **More info → Run anyway**.
+            - **Linux**: `OpenKaraoke-Linux.AppImage` (any distro), `.deb` (Ubuntu/Debian) or `.rpm` (Fedora)
           releaseDraft: false
           args: ${{ matrix.args }}
 
@@ -89,14 +89,14 @@ jobs:
           mkdir -p stable
           case "$RUNNER_OS" in
             macOS)
-              cp "$B"/dmg/*.dmg stable/Croonly-macOS.dmg ;;
+              cp "$B"/dmg/*.dmg stable/OpenKaraoke-macOS.dmg ;;
             Windows)
-              cp "$B"/nsis/*-setup.exe stable/Croonly-Windows-Setup.exe
-              cp "$B"/msi/*.msi stable/Croonly-Windows.msi ;;
+              cp "$B"/nsis/*-setup.exe stable/OpenKaraoke-Windows-Setup.exe
+              cp "$B"/msi/*.msi stable/OpenKaraoke-Windows.msi ;;
             Linux)
-              cp "$B"/appimage/*.AppImage stable/Croonly-Linux.AppImage
-              cp "$B"/deb/*.deb stable/Croonly-Linux.deb
-              cp "$B"/rpm/*.rpm stable/Croonly-Linux.rpm ;;
+              cp "$B"/appimage/*.AppImage stable/OpenKaraoke-Linux.AppImage
+              cp "$B"/deb/*.deb stable/OpenKaraoke-Linux.deb
+              cp "$B"/rpm/*.rpm stable/OpenKaraoke-Linux.rpm ;;
           esac
           gh release upload "${{ github.ref_name }}" stable/* --clobber
 
@@ -108,7 +108,7 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags/')"
         uses: actions/upload-artifact@v4
         with:
-          name: Croonly-${{ runner.os }}
+          name: OpenKaraoke-${{ runner.os }}
           if-no-files-found: error
           path: |
             ${{ matrix.bundles }}/dmg/*.dmg

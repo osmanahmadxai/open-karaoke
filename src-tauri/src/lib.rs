@@ -562,7 +562,7 @@ pub fn run() {
             let cache = paths.app_cache_dir()?.join("audio");
             let recordings = paths
                 .audio_dir()
-                .map(|d| d.join("Croonly"))
+                .map(|d| d.join("Open Karaoke"))
                 .unwrap_or_else(|_| data.join("recordings"));
             let dirs = Dirs { tools: data.join("bin"), cache: cache.clone(), recordings };
             std::fs::create_dir_all(&dirs.tools)?;
@@ -612,5 +612,5 @@ pub fn run() {
             recordings_dir,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running Croonly");
+        .expect("error while running Open Karaoke");
 }

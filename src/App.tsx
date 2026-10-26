@@ -55,7 +55,7 @@ function TitleBar() {
       ) : (
         <div className="brand" data-tauri-drag-region>
           <div className="brand-dot" />
-          Croonly
+          Open Karaoke
         </div>
       )}
       <div className="spacer" data-tauri-drag-region />

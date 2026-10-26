@@ -1,4 +1,4 @@
-//! First-run installation of the external helpers Croonly drives:
+//! First-run installation of the external helpers Open Karaoke drives:
 //! yt-dlp (fetches audio) and Deno (the JavaScript runtime yt-dlp needs to
 //! read YouTube). Both are downloaded from their official GitHub releases
 //! into the app data folder, so users need nothing but an internet
@@ -71,7 +71,7 @@ struct SetupProgress<'a> {
 
 pub fn http() -> reqwest::Client {
     reqwest::Client::builder()
-        .user_agent(concat!("Croonly/", env!("CARGO_PKG_VERSION"), " (open-source karaoke)"))
+        .user_agent(concat!("Open Karaoke/", env!("CARGO_PKG_VERSION"), " (open-source karaoke)"))
         .connect_timeout(std::time::Duration::from_secs(15))
         .build()
         .expect("http client")

@@ -1,6 +1,6 @@
 //! Offline check of the song pipeline on real files:
 //! `cargo run --release --example pipeline -- instrumental.m4a original.m4a`
-use croonly_lib::audio::{analysis, decode, stretch};
+use open_karaoke_lib::audio::{analysis, decode, stretch};
 use std::time::Instant;
 
 fn main() {
