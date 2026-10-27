@@ -55,36 +55,21 @@
       }
       h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
       .lead { color: var(--muted); font-size: clamp(17px, 2vw, 20px); max-width: 640px; margin: 0 auto 36px; }
-      .dl {
-        display: inline-flex; align-items: center; gap: 12px;
-        padding: 18px 34px; border-radius: 18px;
-        background: var(--grad); color: white; text-decoration: none;
-        font-weight: 600; font-size: 19px;
-        box-shadow: 0 16px 50px -14px rgba(255, 61, 127, 0.75);
-        transition: transform 0.15s, box-shadow 0.15s;
-      }
-      .dl:hover { transform: translateY(-2px); box-shadow: 0 20px 60px -12px rgba(255, 61, 127, 0.9); }
-      .dl svg { width: 22px; height: 22px; }
-      .dl.disabled { opacity: 0.5; pointer-events: none; }
-      .meta { margin-top: 14px; color: var(--muted); font-size: 14px; }
-      .others { margin-top: 10px; font-size: 14px; color: var(--muted); }
-      .others a { color: var(--text); margin: 0 6px; }
+      .install { max-width: 720px; margin: 0 auto; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 22px; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8); }
+      .tabs { display: flex; gap: 6px; padding: 4px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); margin-bottom: 18px; }
+      .tabs button { flex: 1; height: 36px; border: 0; border-radius: 9px; background: none; color: var(--muted); font: 600 14px Inter, system-ui, sans-serif; cursor: pointer; }
+      .tabs button.on { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+      .steps { margin: 0 0 14px; padding: 0; list-style: none; counter-reset: step; }
+      .steps li { counter-increment: step; display: flex; gap: 12px; align-items: baseline; color: var(--muted); font-size: 15px; margin-bottom: 8px; }
+      .steps li::before { content: counter(step); flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 700; color: white; background: var(--grad); }
+      .steps b { color: var(--text); }
+      .cmd { display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 16px; border-radius: 14px; background: #0b0a10; border: 1px solid rgba(193, 60, 240, 0.45); }
+      .cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; background: none; padding: 0; font: 500 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #f0e6ff; }
+      .copy { flex: none; height: 36px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--grad); color: white; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer; }
+      .install .req { color: var(--muted); font-size: 13px; margin-top: 14px; }
+      .meta { margin-top: 16px; color: var(--muted); font-size: 14px; }
       .shot { margin: 56px auto 0; max-width: 1040px; border-radius: 18px; overflow: hidden; box-shadow: 0 50px 120px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1); }
       .shot img { width: 100%; display: block; }
-      .platforms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 20px; }
-      .plat { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
-      .plat.me { border-color: rgba(193, 60, 240, 0.6); box-shadow: 0 0 0 1px rgba(193, 60, 240, 0.3) inset; }
-      .plat h3 { margin: 0 0 4px; font: 700 20px "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
-      .plat .req { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
-      .plat a.file {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 10px 12px; margin-top: 8px; border-radius: 11px;
-        background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
-        text-decoration: none; font-weight: 600; font-size: 14px;
-      }
-      .plat a.file:hover { background: rgba(255, 255, 255, 0.09); }
-      .plat a.file span { color: var(--muted); font-weight: 500; font-size: 12.5px; }
-      .plat .note { margin-top: 14px; color: var(--muted); font-size: 13px; }
       code { background: rgba(255, 255, 255, 0.08); padding: 1px 6px; border-radius: 6px; font-size: 12.5px; }
       .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 70px 0; }
       .feat { padding: 22px; border-radius: 18px; border: 1px solid var(--line); background: rgba(21, 18, 30, 0.6); }
@@ -93,9 +78,9 @@
       .feat i { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: var(--grad); margin-bottom: 14px; font-style: normal; font-size: 18px; }
       footer { border-top: 1px solid var(--line); padding: 28px 0 50px; color: var(--muted); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
       @media (max-width: 820px) {
-        .platforms, .features { grid-template-columns: 1fr; }
+        .features { grid-template-columns: 1fr; }
         .hero { padding-top: 40px; }
-        .dl { padding: 16px 24px; font-size: 17px; }
+        .cmd { flex-wrap: wrap; }
       }
     </style>
   </head>
@@ -103,7 +88,7 @@
     <div class="wrap">
       <header>
         <a class="brand" href="./"><img src="icon.png" alt="" />Open Karaoke</a>
-        <a class="gh" id="repo-link" href="https://github.com/osmanahmadxai/open-karaoke">GitHub ↗</a>
+        <a class="gh" href="https://github.com/osmanahmadxai/open-karaoke">GitHub ↗</a>
       </header>
 
       <section class="hero">
@@ -112,37 +97,21 @@
           Free, open-source karaoke for your computer. Search any song, hit start, and sing over the instrumental with synced lyrics and a
           real-time autotune. All you need is an internet connection.
         </p>
-        <a class="dl" id="main-dl" href="#downloads">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
-          <span id="main-label">Download Open Karaoke</span>
-        </a>
+        <div class="install" id="install">
+          <div class="tabs" role="tablist">
+            <button data-os="mac">macOS</button>
+            <button data-os="windows">Windows</button>
+            <button data-os="linux">Linux</button>
+          </div>
+          <ol class="steps" id="steps"></ol>
+          <div class="cmd">
+            <code id="cmd"></code>
+            <button class="copy" id="copy">Copy</button>
+          </div>
+          <div class="req" id="req"></div>
+        </div>
         <div class="meta" id="meta">Free · Open source (MIT) · macOS, Windows &amp; Linux</div>
-        <div class="others" id="others"></div>
         <div class="shot"><img src="screenshots/stage-11461b3.jpg" alt="Open Karaoke singing screen with lyrics, pitch graph and autotune controls" /></div>
-      </section>
-
-      <section class="platforms" id="downloads">
-        <div class="plat" data-os="mac">
-          <h3>macOS</h3>
-          <div class="req">macOS 11 or later · 8 GB RAM · AI separation needs Apple Silicon</div>
-          <a class="file" data-asset="OpenKaraoke-macOS.dmg" href="#">OpenKaraoke-macOS.dmg <span>Disk image</span></a>
-          <div class="note">First launch: right-click Open Karaoke in Applications and choose <b>Open</b>. If macOS still refuses, run <code>xattr -cr "/Applications/Open Karaoke.app"</code> in Terminal.</div>
-        </div>
-        <div class="plat" data-os="windows">
-          <h3>Windows</h3>
-          <div class="req">Windows 10 or 11 · 64-bit · 8 GB RAM</div>
-          <a class="file" data-asset="OpenKaraoke-Windows-Setup.exe" href="#">OpenKaraoke-Windows-Setup.exe <span>Installer</span></a>
-          <a class="file" data-asset="OpenKaraoke-Windows.msi" href="#">OpenKaraoke-Windows.msi <span>MSI package</span></a>
-          <div class="note">If SmartScreen appears, click <b>More info → Run anyway</b>. No admin rights needed.</div>
-        </div>
-        <div class="plat" data-os="linux">
-          <h3>Linux</h3>
-          <div class="req">x86-64 · 2024+ distro (Ubuntu 24.04, Fedora 40…) · 8 GB RAM</div>
-          <a class="file" data-asset="OpenKaraoke-Linux.AppImage" href="#">OpenKaraoke-Linux.AppImage <span>Any distro</span></a>
-          <a class="file" data-asset="OpenKaraoke-Linux.deb" href="#">OpenKaraoke-Linux.deb <span>Ubuntu / Debian</span></a>
-          <a class="file" data-asset="OpenKaraoke-Linux.rpm" href="#">OpenKaraoke-Linux.rpm <span>Fedora / openSUSE</span></a>
-          <div class="note">AppImage: <code>chmod +x OpenKaraoke-Linux.AppImage</code> then run it.</div>
-        </div>
       </section>
 
       <section class="features">
@@ -156,62 +125,72 @@
 
       <footer>
         <span>Open Karaoke is free software under the MIT license. It streams content at your request and hosts nothing itself.</span>
-        <span><a href="https://github.com/osmanahmadxai/open-karaoke">Source code</a> · <a href="https://github.com/osmanahmadxai/open-karaoke/releases">All releases</a></span>
+        <span><a href="https://github.com/osmanahmadxai/open-karaoke">Source code</a></span>
       </footer>
     </div>
 
     <script>
       const REPO = "osmanahmadxai/open-karaoke";
-      const latest = (asset) => `https://github.com/${REPO}/releases/latest/download/${asset}`;
-      const PRIMARY = {
-        mac: { asset: "OpenKaraoke-macOS.dmg", label: "Download for macOS" },
-        windows: { asset: "OpenKaraoke-Windows-Setup.exe", label: "Download for Windows" },
-        linux: { asset: "OpenKaraoke-Linux.AppImage", label: "Download for Linux" },
+      const SH = "curl -fsSL https://osmanahmadxai.github.io/open-karaoke/install.sh | bash";
+      const PS = `irm https://raw.githubusercontent.com/${REPO}/main/docs/install.ps1 | iex`;
+      const OS = {
+        mac: {
+          steps: ["Open <b>Terminal</b>: press <b>⌘ Space</b>, type <b>Terminal</b>, press Enter.", "Paste this command and press <b>Enter</b>. Open Karaoke installs and opens by itself."],
+          cmd: SH,
+          req: "macOS 11 or later · 8 GB RAM · AI vocal separation needs Apple Silicon (M1 or newer)",
+        },
+        windows: {
+          steps: ["Open <b>PowerShell</b>: press the <b>Windows key</b>, type <b>PowerShell</b>, press Enter.", "Paste this command and press <b>Enter</b>. Open Karaoke installs (no admin needed) and opens by itself."],
+          cmd: PS,
+          req: "Windows 10 or 11 · 64-bit · 8 GB RAM",
+        },
+        linux: {
+          steps: ["Open a <b>terminal</b>.", "Paste this command and press <b>Enter</b>. Open Karaoke is added to your app menu."],
+          cmd: SH,
+          req: "64-bit Linux from 2024 or newer (Ubuntu 24.04, Fedora 40, Debian 13…) · 8 GB RAM",
+        },
       };
-      const NAMES = { mac: "macOS", windows: "Windows", linux: "Linux" };
 
       function detectOS() {
         const p = (navigator.userAgentData?.platform || navigator.platform || "").toLowerCase();
         const ua = navigator.userAgent.toLowerCase();
-        if (/iphone|ipad|android/.test(ua)) return null;
-        if (p.includes("mac") || ua.includes("mac os")) return "mac";
         if (p.includes("win") || ua.includes("windows")) return "windows";
-        if (p.includes("linux") || ua.includes("linux") || ua.includes("x11")) return "linux";
-        return null;
+        if ((p.includes("linux") || ua.includes("x11")) && !ua.includes("android")) return "linux";
+        return "mac";
       }
 
-      document.querySelectorAll("[data-asset]").forEach((a) => (a.href = latest(a.dataset.asset)));
-
-      const os = detectOS();
-      const main = document.getElementById("main-dl");
-      if (os) {
-        main.href = latest(PRIMARY[os].asset);
-        document.getElementById("main-label").textContent = PRIMARY[os].label;
-        document.querySelector(`.plat[data-os="${os}"]`).classList.add("me");
-        document.getElementById("others").innerHTML =
-          "Other platforms:" +
-          Object.keys(PRIMARY)
-            .filter((k) => k !== os)
-            .map((k) => `<a href="#downloads">${NAMES[k]}</a>`)
-            .join("");
-      } else {
-        document.getElementById("main-label").textContent = "Choose your platform";
-        document.getElementById("others").textContent = "Open Karaoke is a desktop app for macOS, Windows and Linux.";
+      function show(os) {
+        const o = OS[os];
+        document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.os === os));
+        document.getElementById("steps").innerHTML = o.steps.map((t) => `<li><span>${t}</span></li>`).join("");
+        document.getElementById("cmd").textContent = o.cmd;
+        document.getElementById("req").textContent = o.req;
       }
 
-      // Show the current version, or a notice while the first build runs.
+      document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.os)));
+      document.getElementById("copy").addEventListener("click", async (e) => {
+        const text = document.getElementById("cmd").textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const r = document.createRange();
+          r.selectNodeContents(document.getElementById("cmd"));
+          getSelection().removeAllRanges();
+          getSelection().addRange(r);
+          document.execCommand("copy");
+        }
+        e.target.textContent = "Copied!";
+        setTimeout(() => (e.target.textContent = "Copy"), 1800);
+      });
+      show(detectOS());
+
       fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
         .then((rel) => {
           const date = new Date(rel.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-          document.getElementById("meta").textContent = `Version ${rel.tag_name.replace(/^v/, "")} · ${date} · Free & open source (MIT)`;
+          document.getElementById("meta").textContent = `Latest version ${rel.tag_name.replace(/^v/, "")} · ${date} · Free & open source (MIT)`;
         })
-        .catch((status) => {
-          if (status === 404) {
-            main.classList.add("disabled");
-            document.getElementById("meta").textContent = "The first release is being built right now. Check back in a few minutes.";
-          }
-        });
+        .catch(() => {});
     </script>
   </body>
 </html>

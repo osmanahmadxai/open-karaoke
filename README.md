@@ -8,7 +8,7 @@
 
 Free, open-source karaoke for your computer. Search any song, press start, and sing over the instrumental with synced lyrics and a real-time autotune.
 
-[![Download](https://img.shields.io/badge/⬇_Download-OpenKaraoke-ff3d7f?style=for-the-badge)](https://osmanahmadxai.github.io/open-karaoke/)
+[![Install](https://img.shields.io/badge/⬇_Install-Open_Karaoke-ff3d7f?style=for-the-badge)](#-install)
 
 [![Latest release](https://img.shields.io/github/v/release/osmanahmadxai/open-karaoke?color=c13cf0&label=release)](https://github.com/osmanahmadxai/open-karaoke/releases/latest)
 [![Build](https://img.shields.io/github/actions/workflow/status/osmanahmadxai/open-karaoke/release.yml?label=build)](https://github.com/osmanahmadxai/open-karaoke/actions)
@@ -16,7 +16,7 @@ Free, open-source karaoke for your computer. Search any song, press start, and s
 ![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-555)
 ![Built with](https://img.shields.io/badge/built%20with-Rust%20%2B%20Tauri%20%2B%20React-orange)
 
-[Download](#-download) · [Features](#-features) · [Screenshots](#-screenshots) · [How it works](#-how-it-works) · [Build from source](#-build-from-source) · [FAQ](#-faq)
+[Install](#-install) · [Features](#-features) · [Screenshots](#-screenshots) · [How it works](#-how-it-works) · [Build from source](#-build-from-source) · [FAQ](#-faq)
 
 </div>
 
@@ -32,20 +32,27 @@ Most karaoke apps are subscription services with a limited catalogue, and the fr
 - 🌐 **Nothing to set up.** No account, no API keys, no plugins. All you need is an internet connection.
 - 💸 **Free and open source** under the MIT license.
 
-## ⬇ Download
+## ⬇ Install
 
-> ### **[osmanahmadxai.github.io/open-karaoke](https://osmanahmadxai.github.io/open-karaoke/)**
-> One link for every platform. It detects your computer and gives you the right installer.
+Install with one command. It downloads the latest version, installs it and opens it, with no "unverified developer" warnings.
 
-Or pick a file directly. These links always point to the newest version.
+**macOS:** open **Terminal** (⌘ Space → "Terminal") and run:
 
-| | Installer | Notes |
-|---|---|---|
-| 🍎 **macOS 11+**<br><sub>Apple Silicon & Intel</sub> | [**OpenKaraoke-macOS.dmg**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-macOS.dmg) | Open the DMG and drag Open Karaoke to Applications. The first time, **right-click → Open**. |
-| 🪟 **Windows 10/11** | [**OpenKaraoke-Windows-Setup.exe**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows-Setup.exe) · [.msi](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Windows.msi) | No admin rights needed. If SmartScreen appears, choose **More info → Run anyway**. |
-| 🐧 **Linux** | [**AppImage**](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.AppImage) · [.deb](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.deb) · [.rpm](https://github.com/osmanahmadxai/open-karaoke/releases/latest/download/OpenKaraoke-Linux.rpm) | AppImage: `chmod +x OpenKaraoke-Linux.AppImage && ./OpenKaraoke-Linux.AppImage` |
+```bash
+curl -fsSL https://osmanahmadxai.github.io/open-karaoke/install.sh | bash
+```
 
-<sub>The builds are not code-signed yet, which is why macOS and Windows show a warning the first time. On first launch Open Karaoke downloads what it needs, once (about 190 MB): <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>, <a href="https://deno.com">Deno</a> and the AI vocal-separation model.</sub>
+**Windows:** open **PowerShell** (Windows key → "PowerShell") and run:
+
+```powershell
+irm https://raw.githubusercontent.com/osmanahmadxai/open-karaoke/main/docs/install.ps1 | iex
+```
+
+**Linux:** in a terminal, run the same command as macOS. Open Karaoke is added to your app menu.
+
+Run the same command again any time to update to the newest version. The installers are short, readable scripts: [install.sh](docs/install.sh) · [install.ps1](docs/install.ps1).
+
+<sub>Why a command instead of a download button? macOS and Windows warn about any app downloaded through a browser unless it's signed with a paid developer certificate. Installing from the command line avoids that while keeping the project free. On first launch Open Karaoke downloads what it needs, once (about 190 MB): <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>, <a href="https://deno.com">Deno</a> and the AI vocal-separation model.</sub>
 
 ### System requirements
 
@@ -258,9 +265,9 @@ It runs on any 64-bit Mac, Windows or Linux PC with 8 GB of RAM. While a song is
 </details>
 
 <details>
-<summary><b>macOS says the app "can't be opened" or "is damaged".</b></summary>
+<summary><b>macOS or Windows says the app can't be verified.</b></summary>
 
-The builds aren't notarized by Apple yet. Right-click Open Karaoke in Applications and choose **Open**. If that doesn't work, run `xattr -cr "/Applications/Open Karaoke.app"` in Terminal.
+That happens when the app was downloaded through a web browser. Install it with the one-line command in [Install](#-install) instead: it fetches the same app without the browser's "from the internet" flag, so there's no warning.
 </details>
 
 <details>

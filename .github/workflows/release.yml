@@ -68,12 +68,12 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseName: Open Karaoke ${{ github.ref_name }}
           releaseBody: |
-            Download the installer for your computer:
-            **Easiest:** use the download page, https://osmanahmadxai.github.io/open-karaoke/, which picks the right file for you.
+            **Install with one command** (no security warnings):
 
-            - **macOS** (Apple Silicon + Intel): `OpenKaraoke-macOS.dmg`. The first time, right-click the app and choose **Open**, because builds are not notarized.
-            - **Windows**: `OpenKaraoke-Windows-Setup.exe` (or `.msi`). If SmartScreen appears, choose **More info → Run anyway**.
-            - **Linux**: `OpenKaraoke-Linux.AppImage` (any distro), `.deb` (Ubuntu/Debian) or `.rpm` (Fedora)
+            - **macOS / Linux:** `curl -fsSL https://osmanahmadxai.github.io/open-karaoke/install.sh | bash`
+            - **Windows (PowerShell):** `irm https://raw.githubusercontent.com/osmanahmadxai/open-karaoke/main/docs/install.ps1 | iex`
+
+            More at https://osmanahmadxai.github.io/open-karaoke/
           releaseDraft: false
           args: ${{ matrix.args }}
 
